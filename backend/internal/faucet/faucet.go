@@ -60,7 +60,7 @@ func SendEthersToSpecificAddress(client *ethclient.Client, privateKey *ecdsa.Pri
 	// Convert nbEthers (int) en big.Int
 	amount := big.NewInt(int64(nbEthers))
 	// Convert Ethers to Wei (1 Ether = 1e18 Wei)
-	weiValue := new(big.Int).Mul(amount, big.NewInt(0))
+	weiValue := new(big.Int).Mul(amount, big.NewInt(1000000000000000000))
 
 	value := weiValue         // in wei (1 eth)
 	gasLimit := uint64(21000) // in units
