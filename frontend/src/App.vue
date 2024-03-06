@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import MyHeader from './components/MyHeader.vue'
-import AccountButton from './components/WalletsButton.vue'
-import AccessSendTransaction from './components/AccessSendTransaction.vue';
+import Navbar from './components/global/Navbar.vue'
+import AccessWallets from './components/access/AccessWallets.vue'
+import AccessSendEthersToSpecificAddress from './components/access/AccessSendEthersToSpecificAddress.vue';
+import Faucet from './components/access/AccessSimulation.vue'
 
 </script>
 
 <template>
   <header>
     <div class="wrapper">
-      <MyHeader/>
+      <Navbar/>
 
       <nav>
         <RouterLink to="/wallets">
-          <AccountButton/>
+          <AccessWallets/>
         </RouterLink>
-        <RouterLink to="/sendtransaction">
-          <AccessSendTransaction/>
+        <RouterLink to="/SendEthersToSpecificAddress">
+          <AccessSendEthersToSpecificAddress/>
+        </RouterLink>
+        <RouterLink to="/Simulation">
+          <Faucet/>
         </RouterLink>
       </nav>
       <RouterView />

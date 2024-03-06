@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import axios from 'axios'
-import { ref } from 'vue';
+import CreateWallet from '../components/actions/CreateWallet.vue'
 
 </script>
 
 <template>
+<CreateWallet/>
 
 </template>
 

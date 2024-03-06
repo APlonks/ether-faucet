@@ -7,7 +7,7 @@ import Button from 'primevue/button';
 
 <template>
     <div class="card flex justify-content-center">
-        <Button label="Send Transaction" />
+        <Button label="Faucet" />
     </div>
 </template>
 
