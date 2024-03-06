@@ -23,7 +23,7 @@ import Faucet from './components/access/AccessSimulation.vue'
           <Faucet/>
         </RouterLink>
       </nav>
-      <RouterView />
+      <RouterView class="RouterView" />
     </div>
   </header>
   
@@ -63,6 +63,14 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
+}
+
+.RouterView {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; 
+  margin-top: 3em;
 }
 
 /* @media (min-width: 1024px) {
