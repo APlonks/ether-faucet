@@ -4,6 +4,8 @@ import InputText from 'primevue/inputtext';
 import Toast from 'primevue/toast';
 import { useToast } from 'primevue/usetoast';
 import faucetService from '../service/FaucetService';
+import FloatLabel from 'primevue/floatlabel';
+import Button from 'primevue/button';
 
 const wallet_to_send = ref("")
 const toast = useToast();
@@ -25,12 +27,14 @@ function submitForm (){
 
 <template>
 
-<div class="">
+<div class="faucet_form">
     <form @submit.prevent="submitForm" class="form-send-transaction">
-        <label for="wallet_to_send">Choose the public address</label>
-        <InputText id="wallet_to_send" v-model="wallet_to_send" aria-describedby="username-help" />
-        <small id="username-help">Need to be in type common.address</small>
-        <button type="submit">Send Transaction</button>
+        <FloatLabel class="faucet_float_label">
+            <label for="wallet_to_send">Choose the public address</label>
+            <InputText class="faucet_input" id="wallet_to_send" v-model="wallet_to_send" aria-describedby="username-help" />
+        </FloatLabel>
+        <br>
+        <Button class="faucet_button" label="Send Transaction" outlined type="submit"/>
     </form>
     <Toast/>
 </div>
@@ -41,7 +45,22 @@ function submitForm (){
 .form-send-transaction{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: -2px;
     width: 500px;
 }
+
+.faucet_float_label{
+    min-width: 90%;
+}
+
+.faucet_input{
+    min-width: 100%;
+}
+
+.faucet_button{
+    max-width: 50%;
+}
+
 </style>
