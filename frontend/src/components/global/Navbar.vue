@@ -1,12 +1,34 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
 import { ref } from "vue";
+import { RouterLink } from 'vue-router'
 import Image from 'primevue/image';
+import Button from 'primevue/button';
+import { usePrimeVue } from 'primevue/config';
 
 
-const items = ref([
-    
-]);
+// function toggleTheme(){
+//     const PrimeVue = usePrimeVue();
+//     PrimeVue.changeTheme('aura-dark-blue', 'aura-light-blue', 'theme-link', () => {});
+// }
+
+// Path for light and dark theme
+const darkThemePath = '/themes/aura-dark-blue/theme.css';
+const lightThemePath = '/themes/aura-light-blue/theme.css';
+
+// Ref to follow the current theme
+const currentThemePath = ref(lightThemePath);
+
+function toggleTheme() {
+    // To change theme
+    currentThemePath.value = currentThemePath.value === lightThemePath ? darkThemePath : lightThemePath;
+  
+    // Update <link> element with new item
+    const themeLink = document.getElementById('theme-link');
+    if (themeLink) {
+        themeLink.href = currentThemePath.value;
+    }
+}
+
 </script>
 
 
@@ -17,35 +39,12 @@ const items = ref([
         </div>
         <div class="ethereum_logo">
             <RouterLink class="home_link" to="/">
-                <Image src="../../../public/Ethereum_logo_.png" alt="Image" width="40" />
+                <Image src="/Ethereum_logo_.png" alt="Image" width="40" />
             </RouterLink>
             </div>
         <div>
-            DARK MODE
+            <Button icon="pi pi-moon" @click="toggleTheme" label="Dark Mode" />
         </div>
-
-        <!-- <Menubar :model="items" class="container_navbar">
-            <template #start>
-                <RouterLink to="/">
-                    <div class="card flex justify-content-center">
-                        <Image src="../../../public/Ethereum_logo_.png" alt="Image" width="30" />
-                    </div>
-                </RouterLink>
-            </template>
-            <template #item="{ item, props, hasSubmenu, root }">
-                <a class="flex align-items-center" v-bind="props.action">
-                    <span :class="item.icon" />
-                    <span class="ml-2">{{ item.label }}</span>
-                    <Badge v-if="item.badge" :class="{ 'ml-auto': !root, 'ml-2': root }" :value="item.badge" />
-                    <span v-if="item.shortcut" class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{ item.shortcut }}</span>
-                    <i v-if="hasSubmenu" :class="['pi pi-angle-down', { 'pi-angle-down ml-2': root, 'pi-angle-right ml-auto': !root }]"></i>
-                    azeaze
-                </a>
-            </template>
-            <template #end>
-                DARK MODE
-            </template>
-        </Menubar> -->
     </div>
 </template>
 

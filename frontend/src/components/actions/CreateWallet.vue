@@ -30,7 +30,7 @@ const columns = [
 
 <template>
     <div class="container">
-        <Button @click="createWallet" label="New Wallet" />
+        <Button @click="createWallet" label="New Wallet" outlined />
         <br>
         <div class="card">
             <DataTable :value="wallets" tableStyle="min-width: 60rem">
