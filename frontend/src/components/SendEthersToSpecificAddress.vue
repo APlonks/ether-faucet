@@ -13,14 +13,18 @@ const reqReturn = ref("")
 
 function submitForm (){
     faucetService.SendEthersToSpecificAddress(wallet_to_send.value).then(response => {
-        console.log('Transaction successful', response);
         reqReturn.value = response.data.status
-        console.log('Request return : '+ reqReturn.value)
-    })
-    .catch(error => {
-        console.error('Error sending transaction', error);
+        if (reqReturn.value == "Request sent to the backend") {
+            toast.add({ severity: 'info', summary: 'Info', detail: '1 ETH sent', life: 3000});
+            console.log("Request sent to the backend")
+        } else {
+            console.error("Problem with the http response from the backend")
+        }
+    }).catch(error => {
+        console.error('Error sending transaction : check the file .env of the frontend to configure the backend ip');
+        console.error(error)
+        toast.add({ severity: 'error', summary: 'Info', detail: 'Not sent to the backend (check console)', life: 3000});
     });
-    toast.add({ severity: 'info', summary: 'Info', detail: '1 ETH sent', life: 3000 });
 }
 
 </script>

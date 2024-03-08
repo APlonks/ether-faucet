@@ -72,6 +72,6 @@ func SendEthersToSpecificAddress(c *gin.Context) {
 		faucet.SendEthersToSpecificAddress(clientHttp, richPrivKey, richPubKey, common.HexToAddress(userReq.ToWallet), config.Simulation.Ethers)
 	}
 
-	c.JSON(200, gin.H{"status": "GOOOOOD"})
+	c.JSON(200, gin.H{"status": "Request sent to the backend"})
 
 }

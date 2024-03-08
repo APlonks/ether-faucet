@@ -19,9 +19,7 @@ import Faucet from './components/access/AccessSimulation.vue'
         <RouterLink to="/SendEthersToSpecificAddress">
           <AccessSendEthersToSpecificAddress/>
         </RouterLink>
-        <RouterLink to="/Simulation">
-          <Faucet/>
-        </RouterLink>
+        <Faucet/>
       </nav>
       <RouterView class="RouterView" />
     </div>
@@ -45,6 +43,8 @@ nav {
   font-size: 12px;
   text-align: center;
   margin-top: 2rem;
+  display: flex;
+  justify-content: center;
 }
 
 nav a.router-link-exact-active {

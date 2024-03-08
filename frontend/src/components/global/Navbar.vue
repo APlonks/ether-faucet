@@ -39,7 +39,7 @@ function toggleTheme() {
         </div>
         <div class="ethereum_logo">
             <RouterLink class="home_link" to="/">
-                <Image src="/Ethereum_logo_.png" alt="Image" width="40" />
+                <Image src="/Ethereum_logo.png" alt="Image" width="40" />
             </RouterLink>
             </div>
         <div>
