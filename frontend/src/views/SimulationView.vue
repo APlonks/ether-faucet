@@ -1,11 +1,11 @@
 <script setup lang="ts">
-
-// import Button from 'primevue/button';
+import CreateSimulation from '../components/actions/CreateSimulation.vue'
 
 </script>
 
 
 <template>
+    <CreateSimulation/>
 </template>
 
 <style>

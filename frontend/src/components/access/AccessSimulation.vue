@@ -36,5 +36,4 @@ import Image from 'primevue/image';
 .p-card-body{
     padding: 0rem;
 }
-
 </style>

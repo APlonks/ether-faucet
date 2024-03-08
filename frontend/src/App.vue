@@ -13,12 +13,8 @@ import Faucet from './components/access/AccessSimulation.vue'
       <Navbar/>
 
       <nav>
-        <RouterLink to="/wallets">
-          <AccessWallets/>
-        </RouterLink>
-        <RouterLink to="/SendEthersToSpecificAddress">
-          <AccessSendEthersToSpecificAddress/>
-        </RouterLink>
+        <AccessWallets/>
+        <AccessSendEthersToSpecificAddress/>
         <Faucet/>
       </nav>
       <RouterView class="RouterView" />
@@ -71,6 +67,10 @@ nav a:first-of-type {
   align-items: center;
   width: 100%; 
   margin-top: 3em;
+}
+
+nav * {
+  margin: 1rem;
 }
 
 /* @media (min-width: 1024px) {
