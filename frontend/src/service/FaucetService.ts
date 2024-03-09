@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const faucetService = {
     SendEthersToSpecificAddress(wallet_to_send:string){
-        return axios.post(import.meta.env.VITE_BACKEND_URL+'/SendEthersToSpecificAddress',{
+        return axios.post(import.meta.env.VITE_BACKEND_URL+'/faucet',{
             wallet: wallet_to_send
         }).catch(error => {
             console.log(error);

@@ -25,7 +25,7 @@ function toggleTheme() {
     // Update <link> element with new item
     const themeLink = document.getElementById('theme-link');
     if (themeLink) {
-        themeLink.href = currentThemePath.value;
+        (themeLink as HTMLLinkElement).href = currentThemePath.value;
     }
 }
 

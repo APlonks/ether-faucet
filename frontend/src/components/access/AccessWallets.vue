@@ -14,9 +14,9 @@ import Image from 'primevue/image';
         </template>
         <template #title>Wallets</template>
         <template #content>
-            <p class="m-0">
-                Create Wallets : public key + private key
-            </p>
+            <p class="m-0"> Create Wallets : public key + private key </p>
+            <br>
+            <br>
         </template>
         <template #footer>
             <div class="flex gap-3 mt-1">

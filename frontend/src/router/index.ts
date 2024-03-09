@@ -15,9 +15,9 @@ const router = createRouter({
       component: () => import('../views/WalletsView.vue')
     },
     {
-      path: '/SendEthersToSpecificAddress',
-      name: 'SendEthersToSpecificAddress',
-      component: () => import('../views/SendEthersToSpecificAddressView.vue')
+      path: '/faucet',
+      name: 'faucet',
+      component: () => import('../views/FaucetView.vue')
     },
     {
       path: '/Simulation',

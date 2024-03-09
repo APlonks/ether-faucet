@@ -2,7 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import Navbar from './components/global/Navbar.vue'
 import AccessWallets from './components/access/AccessWallets.vue'
-import AccessSendEthersToSpecificAddress from './components/access/AccessSendEthersToSpecificAddress.vue';
+import AccessFaucet from './components/access/AccessFaucet.vue';
 import Faucet from './components/access/AccessSimulation.vue'
 
 </script>
@@ -14,7 +14,7 @@ import Faucet from './components/access/AccessSimulation.vue'
 
       <nav>
         <AccessWallets/>
-        <AccessSendEthersToSpecificAddress/>
+        <AccessFaucet/>
         <Faucet/>
       </nav>
       <RouterView class="RouterView" />
@@ -73,7 +73,7 @@ nav * {
   margin: 1rem;
 }
 
-/* @media (min-width: 1024px) {
+/* @media (max-width: 1024px) {
   header {
     display: flex;
     place-items: center;

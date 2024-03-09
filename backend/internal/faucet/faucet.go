@@ -76,11 +76,11 @@ func SendEthersToSpecificAddress(client *ethclient.Client, privateKey *ecdsa.Pri
 	}
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("LA", err)
 	}
 	err = client.SendTransaction(context.Background(), signedTx)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("ICI:", err)
 	}
 	fmt.Println("Transaction")
 }
