@@ -1,0 +1,47 @@
+services:
+  ether-faucet-frontend:
+    container_name: ether-faucet-frontend
+    build:
+      context: ./frontend
+      dockerfile: Containerfile
+    ports: 
+      - 5001:80
+    env_file:
+      - frontend/.env_docker
+    networks: 
+      - bcnetwork
+
+  ether-faucet-backend:
+    container_name: ether-faucet-backend
+    build:
+      context: ./backend
+      dockerfile: Containerfile
+    ports: 
+      - 5002:8080
+    env_file:
+      - backend/.env_docker
+    networks: 
+      - bcnetwork
+
+  weavescope:
+    image: weaveworks/scope:1.13.2
+    # network_mode: "host"
+    pid: "host"
+    privileged: true
+    ports:
+      - "4040:4040"
+    labels:
+      - "works.weave.role=system"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
+    command:
+      - "--probe.docker=true"
+    networks: 
+      - bcnetwork
+
+networks:
+  bcnetwork:
+    name: bcnetwork
+    driver: bridge
+    external: true
+

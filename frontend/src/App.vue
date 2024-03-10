@@ -41,6 +41,12 @@ nav {
   margin-top: 2rem;
   display: flex;
   justify-content: center;
+  height: 22rem;
+}
+
+nav > * {
+  box-shadow: 1px 1px 5px black;
+  padding: 1rem;
 }
 
 nav a.router-link-exact-active {

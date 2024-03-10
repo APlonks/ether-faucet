@@ -1,13 +1,11 @@
 <script setup lang="ts">
 
 import {ref} from "vue"
-import ProgressSpinner from 'primevue/progressspinner';
 import Button from 'primevue/button'
 import InputNumber from "primevue/inputnumber";
 import SimulationService from "@/service/SimulationService";
 import Toast from "primevue/toast";
 import { useToast } from 'primevue/usetoast';
-import { FMT_BYTES } from "web3";
 
 const blocked = ref(false)
 const accounts_per_wallet = ref<number>()
@@ -78,11 +76,6 @@ function stopSimulation(){
             </div>
             <Toast/>
         </div>
-
-        <!-- <div class="">
-            <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
-                animationDuration="1s" aria-label="Custom ProgressSpinner" />
-        </div> -->
     </div>
 </template>
 

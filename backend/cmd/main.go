@@ -8,24 +8,27 @@ import (
 	"crypto/ecdsa"
 	"fmt"
 	"net/http"
+	"os"
 	"reflect"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 var (
-	configPath  string
-	err         error
-	config      *utils.Config
-	clientHttp  *ethclient.Client
-	clientWs    *ethclient.Client
-	richPrivKey *ecdsa.PrivateKey
-	richPubKey  common.Address
-	stopChannel chan bool // Simulation control
-	SimuRunning bool
+	RICH_PRIVATE_KEY string
+	HTTP_ENDPOINT    string
+	WS_ENDPOINT      string
+	err              error
+	clientHttp       *ethclient.Client
+	clientWs         *ethclient.Client
+	richPrivKey      *ecdsa.PrivateKey
+	richPubKey       common.Address
+	stopChannel      chan bool // Simulation control
+	SimuRunning      bool
 )
 
 type SimuRequest struct {
@@ -37,11 +40,18 @@ type SimuRequest struct {
 
 func main() {
 
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+		fmt.Print("Error:", err)
+	}
+
+	RICH_PRIVATE_KEY = os.Getenv("RICH_PRIVATE_KEY")
+	HTTP_ENDPOINT = os.Getenv("HTTP_ENDPOINT")
+	WS_ENDPOINT = os.Getenv("WS_ENDPOINT")
+
 	// Init channel stopChannel
 	stopChannel = make(chan bool)
-
-	configPath, err = utils.ParseFlags()
-	config, err = utils.LoadConfig(configPath)
 
 	router := gin.Default()
 
@@ -53,7 +63,7 @@ func main() {
 
 	router.POST("/stop-simulation", StopSimulationHandler)
 
-	router.Run() // listen and serve on 0.0.0.0:8080
+	router.Run(":8080") // Port 8080 by default
 }
 
 func SendEthersToSpecificAddress(c *gin.Context) {
@@ -63,10 +73,10 @@ func SendEthersToSpecificAddress(c *gin.Context) {
 	}
 	var userReq UserRequest
 
-	richPrivKey, richPubKey, err = wallets.RetrieveKeysFromHexHashedPrivateKey(config.Connection.Rich_private_key)
+	richPrivKey, richPubKey, err = wallets.RetrieveKeysFromHexHashedPrivateKey(RICH_PRIVATE_KEY)
 	utils.ErrManagement(err)
 
-	clientHttp, err = ethclient.Dial(config.Connection.Http_endpoint)
+	clientHttp, err = ethclient.Dial(HTTP_ENDPOINT)
 	utils.ErrManagement(err)
 	//////////////////////////////
 
@@ -146,10 +156,10 @@ func StopSimulationHandler(c *gin.Context) {
 
 func Simulation(simuReq SimuRequest, stopChan chan bool) {
 
-	richPrivKey, richPubKey, err = wallets.RetrieveKeysFromHexHashedPrivateKey(config.Connection.Rich_private_key)
+	richPrivKey, richPubKey, err = wallets.RetrieveKeysFromHexHashedPrivateKey(RICH_PRIVATE_KEY)
 	utils.ErrManagement(err)
 
-	clientWs, err = ethclient.Dial(config.Connection.Ws_endpoint)
+	clientWs, err = ethclient.Dial(WS_ENDPOINT)
 	utils.ErrManagement(err)
 
 	simulation.Simulation(clientWs, richPrivKey, richPubKey, simuReq.AccountsPerWallet, simuReq.EthersPerWallet, simuReq.EthersPerTransaction, simuReq.TransactionsPerBlock, stopChan)

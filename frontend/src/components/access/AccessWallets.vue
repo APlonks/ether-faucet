@@ -15,11 +15,9 @@ import Image from 'primevue/image';
         <template #title>Wallets</template>
         <template #content>
             <p class="m-0"> Create Wallets : public key + private key </p>
-            <br>
-            <br>
         </template>
         <template #footer>
-            <div class="flex gap-3 mt-1">
+            <div class="card_footer flex gap-3 mt-1">
                 <RouterLink to="/wallets">
                     <Button label="Create Wallets" class="w-full" />
                 </RouterLink>
@@ -29,12 +27,6 @@ import Image from 'primevue/image';
 </template>
 
 <style>
-.card_simu{
-    /* background-color: rgb(247, 248, 250); */
-    padding: 1rem;
-    box-shadow: 1px 1px 5px black;
-}
-
 .p-card-body{
     padding: 0rem;
 }

@@ -14,8 +14,9 @@ run:
 
 compile:
 	echo "Compiling for every OS and Platform"
-	GOOS=linux GOARCH=arm go build -o build/main-linux-arm cmd/main.go
-	GOOS=linux GOARCH=arm64 go build -o build/main-linux-arm64 cmd/main.go
-	GOOS=freebsd GOARCH=386 go build -o build/main-freebsd-386 cmd/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o build/main-linux-arm cmd/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/main-linux-arm64 cmd/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/main-linux-amd64 cmd/main.go
+	CGO_ENABLED=0 GOOS=freebsd GOARCH=386 go build -o build/main-freebsd-386 cmd/main.go
 
 all: hello build

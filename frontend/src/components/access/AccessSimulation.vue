@@ -12,9 +12,7 @@ import Image from 'primevue/image';
         </template>
         <template #title>Simulation</template>
         <template #content>
-            <p class="m-0">
-                Create Simulation with a specific number of wallets and transactions per block
-            </p>
+            <p class="m-0">Create Simulation with a specific number of wallets and transactions per block</p>
         </template>
         <template #footer>
             <div class="flex gap-3 mt-1">
@@ -27,12 +25,6 @@ import Image from 'primevue/image';
 </template>
 
 <style>
-.card_simu{
-    /* background-color: rgb(247, 248, 250); */
-    padding: 1rem;
-    box-shadow: 1px 1px 5px black;
-}
-
 .p-card-body{
     padding: 0rem;
 }
