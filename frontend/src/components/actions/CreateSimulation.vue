@@ -1,11 +1,114 @@
 <script setup lang="ts">
 
+import {ref} from "vue"
+import ProgressSpinner from 'primevue/progressspinner';
+import Button from 'primevue/button'
+import InputNumber from "primevue/inputnumber";
+import SimulationService from "@/service/SimulationService";
+import Toast from "primevue/toast";
+import { useToast } from 'primevue/usetoast';
+import { FMT_BYTES } from "web3";
 
+const blocked = ref(false)
+const accounts_per_wallets = ref<number>()
+const ethers_per_wallets = ref<number>()
+const ethers_per_transactions = ref<number>()
+const transactions_per_blocks = ref<number>()
+const reqReturn = ref("")
+const toast = useToast();
+
+
+function startSimulation(){
+    SimulationService.StartSimulation(accounts_per_wallets.value ?? 1, ethers_per_wallets.value ?? 1, ethers_per_transactions.value ?? 0, transactions_per_blocks.value ?? 2)
+    .then(response => {
+        if (response && "data" in response) {
+            console.log(response.data)
+            reqReturn.value = response.data.message
+            if (reqReturn.value == "Simulation already started"){
+                toast.add({ severity: 'warn', summary: 'Warning', detail: 'Simulation already started', life: 3000});
+            } else if (reqReturn.value == "Simulation started"){
+                toast.add({ severity: 'info', summary: 'Success', detail: 'Simulation started', life: 3000});
+            }
+        } else {
+            console.error("Response is undefined or not in expected format.");
+            console.error("The Backend is propably not running");
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Request not sent to the backend (check console)\n the backend is probably not running', life: 3000});
+        }
+    })
+}
+
+function stopSimulation(){
+    SimulationService.StopSimulation().then(response =>{
+        if (response && "data" in response){
+            console.log(response.data)
+            reqReturn.value = response.data.message
+            if(reqReturn.value == "Simulation already stopped"){
+                toast.add({ severity: 'warn', summary: 'Warning', detail: 'Simulation already stopped', life: 3000});
+            }else if (reqReturn.value == "Simulation stopped"){
+                toast.add({ severity: 'info', summary: 'Warning', detail: 'Simulation stopped', life: 3000});
+            }
+        }
+    })
+}
 </script>
 
 <template>
-    <div>test</div>
+    <div class="container_simu">
+        <div class="faucet_form">
+            <div class="simu_form_item">
+                <label for="stacked-buttons" class="font-bold block mb-2"> Wallets number per groups </label>
+                <InputNumber v-model="accounts_per_wallets" inputId="wallets-number-per-groups" mode="decimal" showButtons :min="1" :max="100" />
+            </div>
+            <div class="simu_form_item">
+                <label for="stacked-buttons" class="font-bold block mb-2"> Ethers per wallets </label>
+                <InputNumber v-model="ethers_per_wallets" inputId="ethers-per-wallets" mode="decimal" showButtons :min="1" :max="100" :step="1" />
+            </div>
+            <div class="simu_form_item">
+                <label for="stacked-buttons" class="font-bold block mb-2"> Ethers per transactions </label>
+                <InputNumber v-model="ethers_per_transactions" inputId="ethers-per-transactions" mode="decimal" showButtons :min="0" :max="100" :step="0.001" />
+            </div>
+            <div class="simu_form_item">
+                <label for="stacked-buttons" class="font-bold block mb-2"> Transactions per blocks </label>
+                <InputNumber v-model="transactions_per_blocks" inputId="transactions-per-blocks" mode="decimal" showButtons :min="2" :max="100" :step="1"/>
+            </div>
+            <br>
+            <div>
+                <Button class="simu_button" label="Start Simulaion" outlined @click="startSimulation"/>
+                <Button class="simu_button" label="Stop Simulation" outlined @click="stopSimulation"/>
+            </div>
+            <Toast/>
+        </div>
+
+        <!-- <div class="">
+            <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
+                animationDuration="1s" aria-label="Custom ProgressSpinner" />
+        </div> -->
+    </div>
 </template>
 
 <style>
+.simu_form_item{
+    display: flex;
+    flex-direction: column;
+}
+
+.simu_button{
+    margin-inline: 1rem;
+}
+
+.container_simu{
+    display: flex;
+    flex-direction: column;
+}
+
+.faucet_form{
+    display: flex;
+    flex-direction: column;
+}
+
+.simu_help_button{
+    margin-top: 1rem;
+    width: 40%;
+}
+
 </style>

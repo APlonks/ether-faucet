@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import Navbar from './components/global/Navbar.vue'
 import AccessWallets from './components/access/AccessWallets.vue'
 import AccessFaucet from './components/access/AccessFaucet.vue';
-import Faucet from './components/access/AccessSimulation.vue'
+import AccessSimulation from './components/access/AccessSimulation.vue'
 
 </script>
 
@@ -15,7 +15,7 @@ import Faucet from './components/access/AccessSimulation.vue'
       <nav>
         <AccessWallets/>
         <AccessFaucet/>
-        <Faucet/>
+        <AccessSimulation/>
       </nav>
       <RouterView class="RouterView" />
     </div>
@@ -65,7 +65,7 @@ nav a:first-of-type {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%; 
+  /* width: 100%;  */
   margin-top: 3em;
 }
 

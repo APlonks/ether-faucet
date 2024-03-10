@@ -33,7 +33,7 @@ const columns = [
         <Button @click="createWallet" label="New Wallet" outlined />
         <br>
         <div class="card">
-            <DataTable :value="wallets" tableStyle="min-width: 60rem">
+            <DataTable :value="wallets" :tableStyle="{ minWidth: '60rem' }">
                 <Column v-for="col in columns" :key="col.field" :field="col.field" :header="col.header"></Column>
             </DataTable>
         </div>

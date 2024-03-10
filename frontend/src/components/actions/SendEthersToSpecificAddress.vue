@@ -15,7 +15,7 @@ function submitForm (){
     faucetService.SendEthersToSpecificAddress(wallet_to_send.value).then(response => {
         if (response && 'data' in response) {
             console.log("The response:",response)
-            reqReturn.value = response.data.status
+            reqReturn.value = response.data.message
             if (reqReturn.value == "Request sent to the backend") {
                 toast.add({ severity: 'info', summary: 'Info', detail: '1 ETH sent', life: 3000});
                 console.log("Request sent to the backend")
@@ -76,4 +76,4 @@ function submitForm (){
     max-width: 50%;
 }
 
-</style>../../service/FaucetService
+</style>

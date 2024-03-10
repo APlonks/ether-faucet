@@ -19,20 +19,12 @@ var (
 	walletsTo   []wallets.Wallet
 )
 
-func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richPubKey common.Address, numWallets int, nbEthers int, numTransactions int) {
+func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richPubKey common.Address, numWallets int, ethersPerWallets int, ethersPerTransactions float64, numTransactions int, stopChan chan bool) {
 	walletsFrom = wallets.CreateWallets(numWallets)
-	fmt.Println("First list of accounts")
-	for _, wallet := range walletsFrom {
-		fmt.Println("Public key:", wallet.AddressHex, "; Private key:", wallet.KeyHex)
-	}
-	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsFrom, 1)
+	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsFrom, float64(ethersPerWallets))
 
 	walletsTo = wallets.CreateWallets(numWallets)
-	fmt.Println("Second list of accounts")
-	for _, wallet := range walletsTo {
-		fmt.Println("Public key:", wallet.AddressHex, "; Private key:", wallet.KeyHex)
-	}
-	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsTo, 1)
+	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsTo, float64(ethersPerWallets))
 
 	time.Sleep(13 * time.Second) // Waiting for a block
 
@@ -50,10 +42,11 @@ func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richP
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println("Going for block number:", (block.Number().Uint64() + 1)) // 3477413
-			fmt.Println(wsClient.BalanceAt(context.Background(), walletsFrom[0].Address, nil))
-			faucet.SendEthersFromAPoolToAPool(wsClient, walletsFrom, walletsTo, numTransactions)
-			fmt.Println(numTransactions, "transactions sended")
+			fmt.Println("Simulation : Going for block number:", (block.Number().Uint64() + 1))
+			faucet.SendEthersFromAPoolToAPool(wsClient, walletsFrom, walletsTo, numTransactions, ethersPerTransactions)
+		case <-stopChan:
+			fmt.Println("Simulation : Stopping simulation...")
+			return
 		}
 	}
 

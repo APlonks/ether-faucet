@@ -3,11 +3,14 @@
 hello:
 	echo "Hello"
 
+dev:
+	go run cmd/main.go -config config.yaml
+
 build:
-	go build -o build/main cmd/main.go
+	go build -o build/main.out cmd/main.go
 
 run:
-	./build/main -config config.yaml
+	./build/main.out -config config.yaml
 
 compile:
 	echo "Compiling for every OS and Platform"

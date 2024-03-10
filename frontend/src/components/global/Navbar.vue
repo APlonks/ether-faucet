@@ -3,13 +3,6 @@ import { ref } from "vue";
 import { RouterLink } from 'vue-router'
 import Image from 'primevue/image';
 import Button from 'primevue/button';
-import { usePrimeVue } from 'primevue/config';
-
-
-// function toggleTheme(){
-//     const PrimeVue = usePrimeVue();
-//     PrimeVue.changeTheme('aura-dark-blue', 'aura-light-blue', 'theme-link', () => {});
-// }
 
 // Path for light and dark theme
 const darkThemePath = '/themes/aura-dark-blue/theme.css';
@@ -43,7 +36,7 @@ function toggleTheme() {
             </RouterLink>
             </div>
         <div>
-            <Button icon="pi pi-moon" @click="toggleTheme" label="Dark Mode" />
+            <Button @click="toggleTheme" label="Dark Mode" />
         </div>
     </div>
 </template>
