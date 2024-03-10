@@ -17,11 +17,6 @@ type Config struct {
 		Http_endpoint    string `yaml:"http_endpoint"`
 		Ws_endpoint      string `yaml:"ws_endpoint"`
 	} `yaml:"connection"`
-	Simulation struct {
-		Accounts     int `yaml:"accounts"`
-		Ethers       int `yaml:"ethers"`
-		Transactions int `yaml:"transactions"`
-	} `yaml:"simulation"`
 }
 
 func LoadConfig(configPath string) (*Config, error) {
@@ -43,11 +38,9 @@ func ParseFlags() (string, error) {
 	// String that contains the configured configuration path
 	var configPath string
 
-	// Set up a CLI flag called "-config" to allow users
-	// to supply the configuration file
+	// Set up a CLI flag called "-config" to allow users to supply the configuration file
 	flag.StringVar(&configPath, "config", "./config.yml", "path to config file")
 
-	// Actually parse the flags
 	flag.Parse()
 
 	// Validate the path first

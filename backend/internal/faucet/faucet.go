@@ -20,7 +20,7 @@ var (
 	wg sync.WaitGroup
 )
 
-func SendEthersFromAPoolToAPool(client *ethclient.Client, walletsFrom []wallets.Wallet, walletsTo []wallets.Wallet, numTransactions int, ethersPerTransactions float64) {
+func SendEthersFromAPoolToAPool(client *ethclient.Client, walletsFrom []wallets.Wallet, walletsTo []wallets.Wallet, numTransactions int, ethersPerTransaction float64) {
 
 	wg.Add(1)
 	go func() {
@@ -28,7 +28,7 @@ func SendEthersFromAPoolToAPool(client *ethclient.Client, walletsFrom []wallets.
 		for i := 0; i < numTransactions/2; i++ {
 			indexFrom := rand.IntN(cap(walletsFrom))
 			indexTo := rand.IntN(cap(walletsTo))
-			SendEthersToSpecificWallet(client, &walletsFrom[indexFrom].Key, walletsFrom[indexFrom].Address, walletsTo[indexTo], ethersPerTransactions)
+			SendEthersToSpecificWallet(client, &walletsFrom[indexFrom].Key, walletsFrom[indexFrom].Address, walletsTo[indexTo], ethersPerTransaction)
 			time.Sleep(time.Millisecond * 10)
 		}
 	}()
@@ -36,14 +36,14 @@ func SendEthersFromAPoolToAPool(client *ethclient.Client, walletsFrom []wallets.
 		for i := 0; i < numTransactions/2; i++ {
 			indexFrom := rand.IntN(cap(walletsFrom))
 			indexTo := rand.IntN(cap(walletsTo))
-			SendEthersToSpecificWallet(client, &walletsTo[indexTo].Key, walletsTo[indexTo].Address, walletsFrom[indexFrom], ethersPerTransactions)
+			SendEthersToSpecificWallet(client, &walletsTo[indexTo].Key, walletsTo[indexTo].Address, walletsFrom[indexFrom], ethersPerTransaction)
 			time.Sleep(time.Millisecond * 10)
 		}
 	}()
 	wg.Wait()
 }
 
-// Pre EIP 1559
+// Transaction Pre EIP 1559
 func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKey, fromAddress common.Address, toWallet common.Address, nbEthers float64) {
 	var (
 		nonce uint64
@@ -51,11 +51,10 @@ func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKe
 	)
 	nonce, err = client.PendingNonceAt(context.Background(), fromAddress)
 	utils.ErrManagement(err)
-	// Convert nbEthers (int) en big.Int
 	amount := big.NewFloat(nbEthers)
+
 	// Convert Ethers to Wei (1 Ether = 1e18 Wei)
 	weiValue := new(big.Float).Mul(amount, big.NewFloat(1e18))
-
 	value := new(big.Int)
 
 	weiValue.Int(value)

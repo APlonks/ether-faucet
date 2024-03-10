@@ -29,15 +29,15 @@ var (
 )
 
 type SimuRequest struct {
-	AccountsPerWallets    int     `json:"accounts_per_wallets"`
-	EthersPerWallets      int     `json:"ethers_per_wallets"`
-	EthersPerTransactions float64 `json:"ethers_per_transactions"`
-	TransactionsPerBlocks int     `json:"transactions_per_blocks"`
+	AccountsPerWallet    int     `json:"accounts_per_wallet"`
+	EthersPerWallet      int     `json:"ethers_per_wallet"`
+	EthersPerTransaction float64 `json:"ethers_per_transaction"`
+	TransactionsPerBlock int     `json:"transactions_per_block"`
 }
 
 func main() {
 
-	// Initialisation du canal stopChannel
+	// Init channel stopChannel
 	stopChannel = make(chan bool)
 
 	configPath, err = utils.ParseFlags()
@@ -63,7 +63,6 @@ func SendEthersToSpecificAddress(c *gin.Context) {
 	}
 	var userReq UserRequest
 
-	// Config Client //////////////
 	richPrivKey, richPubKey, err = wallets.RetrieveKeysFromHexHashedPrivateKey(config.Connection.Rich_private_key)
 	utils.ErrManagement(err)
 
@@ -76,15 +75,14 @@ func SendEthersToSpecificAddress(c *gin.Context) {
 		return
 	}
 	if userReq.ToWallet == "" {
-		fmt.Println("Send 1 ether to the Specific Address : 0x0000000000000000000000000000000000000000")
-		faucet.SendTransactionLegacy(clientHttp, richPrivKey, richPubKey, common.HexToAddress(userReq.ToWallet), float64(config.Simulation.Ethers))
+		fmt.Println("Faucet : Send 1 ether to the Specific Address : 0x0000000000000000000000000000000000000000")
+		faucet.SendTransactionLegacy(clientHttp, richPrivKey, richPubKey, common.HexToAddress(userReq.ToWallet), float64(1))
 		c.JSON(200, gin.H{"message": "Request sent to the backend"})
 	} else {
-		fmt.Println("The Address :", userReq.ToWallet)
 		valid := utils.IsValidAddress(userReq.ToWallet)
 		if valid {
-			fmt.Println("Send 1 ether to the Specific Address :", userReq.ToWallet)
-			faucet.SendTransactionLegacy(clientHttp, richPrivKey, richPubKey, common.HexToAddress(userReq.ToWallet), float64(config.Simulation.Ethers))
+			fmt.Println("Faucet : Send 1 ether to the Specific Address :", userReq.ToWallet)
+			faucet.SendTransactionLegacy(clientHttp, richPrivKey, richPubKey, common.HexToAddress(userReq.ToWallet), float64(1))
 			c.JSON(200, gin.H{"message": "Request sent to the backend"})
 		} else {
 			c.JSON(200, gin.H{"message": "Public address format is not valid"})
@@ -101,22 +99,21 @@ func StartSimulationHandler(c *gin.Context) {
 		return
 	}
 
-	// Lire et valider la requête
 	if err := c.BindJSON(&simuReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if simuReq.AccountsPerWallets < 1 && reflect.TypeOf(simuReq.AccountsPerWallets) != reflect.TypeOf(0) {
+	if simuReq.AccountsPerWallet < 1 && reflect.TypeOf(simuReq.AccountsPerWallet) != reflect.TypeOf(0) {
 		fmt.Println("PERSONNALIZED ERROR : accounts_per_wallets bad parameter")
 		return
-	} else if simuReq.EthersPerWallets < 1 && reflect.TypeOf(simuReq.EthersPerWallets) != reflect.TypeOf(0) {
+	} else if simuReq.EthersPerWallet < 1 && reflect.TypeOf(simuReq.EthersPerWallet) != reflect.TypeOf(0) {
 		fmt.Println("PERSONNALIZED ERROR : ethers_per_wallets bad parameter")
 		return
-	} else if simuReq.EthersPerTransactions < 0 && reflect.TypeOf(simuReq.EthersPerTransactions) != reflect.TypeOf(1.0) {
+	} else if simuReq.EthersPerTransaction < 0 && reflect.TypeOf(simuReq.EthersPerTransaction) != reflect.TypeOf(1.0) {
 		fmt.Println("PERSONNALIZED ERROR : ethers_per_transactions bad parameter")
 		return
-	} else if simuReq.TransactionsPerBlocks < 2 && reflect.TypeOf(simuReq.TransactionsPerBlocks) != reflect.TypeOf(0) {
+	} else if simuReq.TransactionsPerBlock < 2 && reflect.TypeOf(simuReq.TransactionsPerBlock) != reflect.TypeOf(0) {
 		fmt.Println("PERSONNALIZED ERROR : transactions_per_blocks bad parameter")
 		return
 	}
@@ -141,7 +138,7 @@ func StopSimulationHandler(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("Simulation : Going stop Simulation")
+	fmt.Println("Simulation : Going to stop Simulation")
 	SimuRunning = false
 	stopChannel <- true
 	c.JSON(http.StatusOK, gin.H{"message": "Simulation stopped"})
@@ -149,13 +146,12 @@ func StopSimulationHandler(c *gin.Context) {
 
 func Simulation(simuReq SimuRequest, stopChan chan bool) {
 
-	// Config Client //////////////
 	richPrivKey, richPubKey, err = wallets.RetrieveKeysFromHexHashedPrivateKey(config.Connection.Rich_private_key)
 	utils.ErrManagement(err)
 
 	clientWs, err = ethclient.Dial(config.Connection.Ws_endpoint)
 	utils.ErrManagement(err)
 
-	simulation.Simulation(clientWs, richPrivKey, richPubKey, simuReq.AccountsPerWallets, simuReq.EthersPerWallets, simuReq.EthersPerTransactions, simuReq.TransactionsPerBlocks, stopChan)
+	simulation.Simulation(clientWs, richPrivKey, richPubKey, simuReq.AccountsPerWallet, simuReq.EthersPerWallet, simuReq.EthersPerTransaction, simuReq.TransactionsPerBlock, stopChan)
 
 }

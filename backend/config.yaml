@@ -2,7 +2,3 @@ connection:
   rich_private_key: "2e0834786285daccd064ca17f1654f67b4aef298acbb82cef9ec422fb4975622"
   http_endpoint: "http://localhost:8545"
   ws_endpoint: "ws://localhost:8546"
-simulation:
-  accounts: 10    #Accounts per wallets
-  ethers: 1       #ethers sended per transactions
-  transactions: 100  #Transactions per blocks, choose a pair number

@@ -19,12 +19,12 @@ var (
 	walletsTo   []wallets.Wallet
 )
 
-func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richPubKey common.Address, numWallets int, ethersPerWallets int, ethersPerTransactions float64, numTransactions int, stopChan chan bool) {
+func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richPubKey common.Address, numWallets int, ethersPerWallet int, ethersPerTransaction float64, numTransactions int, stopChan chan bool) {
 	walletsFrom = wallets.CreateWallets(numWallets)
-	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsFrom, float64(ethersPerWallets))
+	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsFrom, float64(ethersPerWallet))
 
 	walletsTo = wallets.CreateWallets(numWallets)
-	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsTo, float64(ethersPerWallets))
+	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsTo, float64(ethersPerWallet))
 
 	time.Sleep(13 * time.Second) // Waiting for a block
 
@@ -43,7 +43,7 @@ func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richP
 				log.Fatal(err)
 			}
 			fmt.Println("Simulation : Going for block number:", (block.Number().Uint64() + 1))
-			faucet.SendEthersFromAPoolToAPool(wsClient, walletsFrom, walletsTo, numTransactions, ethersPerTransactions)
+			faucet.SendEthersFromAPoolToAPool(wsClient, walletsFrom, walletsTo, numTransactions, ethersPerTransaction)
 		case <-stopChan:
 			fmt.Println("Simulation : Stopping simulation...")
 			return

@@ -1,12 +1,12 @@
 import axios from 'axios'
 
 const SimulationService = {
-    StartSimulation(accounts_per_wallets:number, ethers_per_wallets:number, ethers_per_transactions:number, transactions_per_blocks:number){
+    StartSimulation(accounts_per_wallet:number, ethers_per_wallet:number, ethers_per_transaction:number, transactions_per_block:number){
         return axios.post(import.meta.env.VITE_BACKEND_URL+'/start-simulation',{
-            accounts_per_wallets: accounts_per_wallets,
-            ethers_per_wallets: ethers_per_wallets,
-            ethers_per_transactions: ethers_per_transactions,
-            transactions_per_blocks: transactions_per_blocks
+            accounts_per_wallet: accounts_per_wallet,
+            ethers_per_wallet: ethers_per_wallet,
+            ethers_per_transaction: ethers_per_transaction,
+            transactions_per_block: transactions_per_block
         }).catch(error => {
             console.log(error);
         });

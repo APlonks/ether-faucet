@@ -13,7 +13,7 @@ import Image from 'primevue/image';
         <template #title>Simulation</template>
         <template #content>
             <p class="m-0">
-                Create Simulation with a specific number of wallets and transactions per blocks
+                Create Simulation with a specific number of wallets and transactions per block
             </p>
         </template>
         <template #footer>

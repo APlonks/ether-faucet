@@ -10,16 +10,16 @@ import { useToast } from 'primevue/usetoast';
 import { FMT_BYTES } from "web3";
 
 const blocked = ref(false)
-const accounts_per_wallets = ref<number>()
-const ethers_per_wallets = ref<number>()
-const ethers_per_transactions = ref<number>()
-const transactions_per_blocks = ref<number>()
+const accounts_per_wallet = ref<number>()
+const ethers_per_wallet = ref<number>()
+const ethers_per_transaction = ref<number>()
+const transactions_per_block = ref<number>()
 const reqReturn = ref("")
 const toast = useToast();
 
 
 function startSimulation(){
-    SimulationService.StartSimulation(accounts_per_wallets.value ?? 1, ethers_per_wallets.value ?? 1, ethers_per_transactions.value ?? 0, transactions_per_blocks.value ?? 2)
+    SimulationService.StartSimulation(accounts_per_wallet.value ?? 1, ethers_per_wallet.value ?? 1, ethers_per_transaction.value ?? 0, transactions_per_block.value ?? 2)
     .then(response => {
         if (response && "data" in response) {
             console.log(response.data)
@@ -56,20 +56,20 @@ function stopSimulation(){
     <div class="container_simu">
         <div class="faucet_form">
             <div class="simu_form_item">
-                <label for="stacked-buttons" class="font-bold block mb-2"> Wallets number per groups </label>
-                <InputNumber v-model="accounts_per_wallets" inputId="wallets-number-per-groups" mode="decimal" showButtons :min="1" :max="100" />
+                <label for="stacked-buttons" class="font-bold block mb-2"> Wallets number per group </label>
+                <InputNumber v-model="accounts_per_wallet" inputId="wallets-number-per-group" mode="decimal" showButtons :min="1" :max="100" />
             </div>
             <div class="simu_form_item">
-                <label for="stacked-buttons" class="font-bold block mb-2"> Ethers per wallets </label>
-                <InputNumber v-model="ethers_per_wallets" inputId="ethers-per-wallets" mode="decimal" showButtons :min="1" :max="100" :step="1" />
+                <label for="stacked-buttons" class="font-bold block mb-2"> Ethers per wallet </label>
+                <InputNumber v-model="ethers_per_wallet" inputId="ethers-per-wallet" mode="decimal" showButtons :min="1" :max="100" :step="1" />
             </div>
             <div class="simu_form_item">
-                <label for="stacked-buttons" class="font-bold block mb-2"> Ethers per transactions </label>
-                <InputNumber v-model="ethers_per_transactions" inputId="ethers-per-transactions" mode="decimal" showButtons :min="0" :max="100" :step="0.001" />
+                <label for="stacked-buttons" class="font-bold block mb-2"> Ethers per transaction </label>
+                <InputNumber v-model="ethers_per_transaction" inputId="ethers-per-transaction" mode="decimal" showButtons :min="0" :max="100" :step="0.001" />
             </div>
             <div class="simu_form_item">
-                <label for="stacked-buttons" class="font-bold block mb-2"> Transactions per blocks </label>
-                <InputNumber v-model="transactions_per_blocks" inputId="transactions-per-blocks" mode="decimal" showButtons :min="2" :max="100" :step="1"/>
+                <label for="stacked-buttons" class="font-bold block mb-2"> Transactions per block </label>
+                <InputNumber v-model="transactions_per_block" inputId="transactions-per-block" mode="decimal" showButtons :min="2" :max="100" :step="1"/>
             </div>
             <br>
             <div>
