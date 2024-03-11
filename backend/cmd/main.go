@@ -63,7 +63,7 @@ func main() {
 
 	router.POST("/stop-simulation", StopSimulationHandler)
 
-	router.Run(":8080") // Port 8080 by default
+	router.Run(":5002") // Port 8080 by default
 }
 
 func SendEthersToSpecificAddress(c *gin.Context) {
@@ -76,14 +76,19 @@ func SendEthersToSpecificAddress(c *gin.Context) {
 	richPrivKey, richPubKey, err = wallets.RetrieveKeysFromHexHashedPrivateKey(RICH_PRIVATE_KEY)
 	utils.ErrManagement(err)
 
+	fmt.Println("The client http endpoint:", HTTP_ENDPOINT)
 	clientHttp, err = ethclient.Dial(HTTP_ENDPOINT)
 	utils.ErrManagement(err)
 	//////////////////////////////
-
+	fmt.Println("Client HTTP passed")
 	if err := c.BindJSON(&userReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	fmt.Println("The client:", clientHttp)
+	fmt.Println("The privateKey:", richPrivKey)
+	fmt.Println("The fromAddres:", richPubKey)
+	fmt.Println("The toWallet:", common.HexToAddress(userReq.ToWallet))
 	if userReq.ToWallet == "" {
 		fmt.Println("Faucet : Send 1 ether to the Specific Address : 0x0000000000000000000000000000000000000000")
 		faucet.SendTransactionLegacy(clientHttp, richPrivKey, richPubKey, common.HexToAddress(userReq.ToWallet), float64(1))

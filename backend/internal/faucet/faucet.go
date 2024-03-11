@@ -5,6 +5,7 @@ import (
 	"backend/internal/wallets"
 	"context"
 	"crypto/ecdsa"
+	"fmt"
 	"log"
 	"math/big"
 	"math/rand/v2"
@@ -45,13 +46,20 @@ func SendEthersFromAPoolToAPool(client *ethclient.Client, walletsFrom []wallets.
 
 // Transaction Pre EIP 1559
 func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKey, fromAddress common.Address, toWallet common.Address, nbEthers float64) {
+	fmt.Println("Entering in SendTransactionLegacy")
 	var (
 		nonce uint64
 		err   error
 	)
+	fmt.Println("The client:", client)
+	fmt.Println("The privateKey:", privateKey)
+	fmt.Println("The fromAddres:", fromAddress)
+	fmt.Println("The toWallet:", toWallet)
+	fmt.Println("The number of ethers:", nbEthers)
 	nonce, err = client.PendingNonceAt(context.Background(), fromAddress)
 	utils.ErrManagement(err)
 	amount := big.NewFloat(nbEthers)
+	fmt.Println("PendingNonce At passed")
 
 	// Convert Ethers to Wei (1 Ether = 1e18 Wei)
 	weiValue := new(big.Float).Mul(amount, big.NewFloat(1e18))
@@ -64,19 +72,24 @@ func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKe
 		log.Fatal(err)
 	}
 	var data []byte
+	fmt.Println("Pre NewTransaction")
 	tx := types.NewTransaction(nonce, toWallet, value, gasLimit, gasPrice, data)
 	chainID, err := client.ChainID(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("Pre signing transaction")
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), privateKey)
 	if err != nil {
 		log.Fatal("Problem signing transaction:", err)
 	}
+	fmt.Println("Post signing transaction")
+	fmt.Println("Pre sending transaction")
 	err = client.SendTransaction(context.Background(), signedTx)
 	if err != nil {
 		log.Fatal("Problem sending transaction:", err)
 	}
+	fmt.Println("Post sending transaction")
 }
 
 func SendEthersToSpecificWallet(client *ethclient.Client, privateKey *ecdsa.PrivateKey, fromAddress common.Address, toWallet wallets.Wallet, nbEthers float64) {
