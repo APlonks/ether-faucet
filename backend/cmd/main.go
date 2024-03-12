@@ -57,6 +57,8 @@ func main() {
 
 	router.Use(cors.Default()) // Allow all
 
+	router.POST("/testing", Testing)
+
 	router.POST("/faucet", SendEthersToSpecificAddress)
 
 	router.POST("/start-simulation", StartSimulationHandler)
@@ -64,6 +66,10 @@ func main() {
 	router.POST("/stop-simulation", StopSimulationHandler)
 
 	router.Run(":5002") // Port 8080 by default
+}
+
+func Testing(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"message": "API connected"})
 }
 
 func SendEthersToSpecificAddress(c *gin.Context) {
