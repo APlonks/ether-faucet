@@ -6,6 +6,7 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import testingService from "@/service/TestingService";
+import InlineMessage from 'primevue/inlinemessage';
 import { error } from "console";
 
 // Path for light and dark theme
@@ -28,14 +29,24 @@ function toggleTheme() {
     }
 }
 
-
 const api_addr = ref<string>('')
 const http_endpoint = ref<string>('')
 const ws_endpoint = ref<string>('')
 
-const api_connected = ref<string>('Test')
-const test_api_button_color = ref<string>('')
+const api_addr_status = ref<string>('')
+const http_endpoint_status = ref<string>('')
+const ws_endpoint_status = ref<string>('')
 
+function reset_status(){
+    api_addr_status.value = "info"
+    http_endpoint_status.value = "info"
+    ws_endpoint_status.value = 'info'
+}
+
+function reset_variables_addr(){
+    api_addr.value =''
+    save()
+}
 
 function save(){
     // Sauvegarde des valeurs dans localStorage
@@ -46,26 +57,16 @@ function save(){
 
 // Envisager d'utiliser web3 au lieu d'un curl
 function TestingConnectionAPI(){
-    console.log("API addr:"+api_addr.value)
-    testingService.TestingAPI(api_addr.value).then(response => {
+    // localStorage.setItem('api_addr', api_addr.value);
+    testingService.TestingAPI(api_addr.value).then(async response => {
         if (response && 'data' in response && response.data.message == "API connected") {
-            api_connected.value = "up"
+            api_addr_status.value = "success"
         }else{
-            api_connected.value = "down"
-        console.log("Can't connect to the API backend")
+            api_addr_status.value = "error"
+            console.log("Can't connect to the API backend")
         }}).catch(error => {
             console.log("Problem with connection to the backend")
         })
-        if (api_connected.value == "up"){
-            console.log("Entering")
-            test_api_button_color.value = "success"
-        } else if (api_connected.value == "down") {
-            console.log("Entering222")
-            test_api_button_color.value = "error"
-        } else {
-            console.log("TOO FAST")
-            console.log("api_connected: "+api_connected.value)
-        }
 }
 
 // Voir si on peut faire un curl pour du ws sinon utiliser web3
@@ -79,9 +80,9 @@ function TestingConnectionWSEndpoint(){
 
 // Chargement des valeurs sauvegardées au montage du composant
 onMounted(() => {
-  api_addr.value = localStorage.getItem('api_addr') || '';
-  http_endpoint.value = localStorage.getItem('http_endpoint') || '';
-  ws_endpoint.value = localStorage.getItem('ws_endpoint') || '';
+    api_addr.value = localStorage.getItem('api_addr') || '';
+    http_endpoint.value = localStorage.getItem('http_endpoint') || '';
+    ws_endpoint.value = localStorage.getItem('ws_endpoint') || '';
 });
 
 </script>
@@ -90,34 +91,42 @@ onMounted(() => {
 <template>
     <div class="navbar">
         <div class="pop_up_container">
-            <Button class="pop_up_addr" @click="visible = true" label="Configuration"/>
-            <Dialog v-model:visible="visible" modal header="Edit configuration" :style="{ width: '40rem' }">
+            <Button class="pop_up_addr" @click="visible = true, reset_status()" label="Configuration"/>
+            <Dialog v-model:visible="visible" modal header="Edit configuration" :style="{ width: '42rem' }">
                 <span class="p-text-secondary block mb-5">...</span>
                 
                 <div class="flex align-items-center gap-3 mb-3 label_input_container">
-                    <label for="api_addr" class="font-semibold w-6rem">Backend API</label>
+                    <label for="api_addr" class="font-semibold w-6rem">Backend API Address</label>
                     <div class="input_container">
-                        <InputText id="api_addr" class="flex-auto" autocomplete="off" v-model="api_addr" />
-                        <Button v-bind:severity="test_api_button_color" v-bind:label="api_connected" v-on:click="TestingConnectionAPI" />
+                        <label for="api_addr"></label>
+                        <InputText id="api_addr" class="flex-auto" autocomplete="off" v-model="api_addr" v-bind:placeholder="api_addr"/>
+                        <InlineMessage v-bind:severity="api_addr_status"></InlineMessage>
+                        <Button outlined label="Test" v-on:click="TestingConnectionAPI" />
                     </div>
                 </div>
                 <div class="flex align-items-center gap-3 mb-5 label_input_container">
                     <label for="http_endpoint" class="font-semibold w-6rem">Node HTTP endpoint</label>
                     <div class="input_container">
                         <InputText id="http_endpoint" class="flex-auto" autocomplete="off" v-model="http_endpoint"/>
-                        <Button label="Test" />
+                        <InlineMessage v-bind:severity="http_endpoint_status"></InlineMessage>
+                        <Button outlined label="Test" />
                     </div>
                 </div>
                 <div class="flex align-items-center gap-3 mb-5 label_input_container">
                     <label for="ws_endpoint" class="font-semibold w-6rem">Node WS endpoint</label>
                     <div class="input_container">
                         <InputText id="ws_endpoint" class="flex-auto" autocomplete="off" v-model="ws_endpoint"/>
-                        <Button label="Test" />
+                        <Button outlined label="Test" />
                     </div>
                 </div>
-                <div class="flex justify-content-end gap-2">
-                    <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
-                    <Button type="button" label="Save" @click="visible = false, save()"></Button>
+                <div class="buttons_cancel_reset_save flex justify-content-end gap-2">
+                    <div class="buttons_cancel_reset">
+                        <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
+                        <Button type="button" label="Reset" @click="reset_variables_addr(), reset_status()"></Button>
+                    </div>
+                    <div class="button_save">
+                        <Button type="button" label="Save" @click="visible = false, save()"></Button>
+                    </div>
                 </div>
             </Dialog>
         </div>
@@ -149,7 +158,7 @@ onMounted(() => {
 }
 
 .input_container{
-    width: 21rem;
+    width: 25rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -171,6 +180,25 @@ onMounted(() => {
 
 .application_title{
     margin-top: 0rem;
+}
+
+.buttons_cancel_reset_save{
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons_cancel_reset{
+    width: 12rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.buttons_save{
+    width: 10rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .home_link{
