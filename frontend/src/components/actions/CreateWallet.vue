@@ -5,8 +5,6 @@ import Button from 'primevue/button';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
-const web3 = new Web3(import.meta.env.VITE_HTTP_ENDPOINT_NODE);
-
 type Wallet = {
     publicKey: string;
     privateKey: string;
@@ -15,6 +13,8 @@ type Wallet = {
 let wallets = ref<Wallet[]>([]);
 
 function createWallet() {
+    const httpEndpoint = localStorage.getItem('http_endpoint') || "http://127.0.0.1"
+    const web3 = new Web3(httpEndpoint);
     const account = web3.eth.accounts.create();
     console.log("Public Key:", account.address);
     console.log("Private Key:", account.privateKey);

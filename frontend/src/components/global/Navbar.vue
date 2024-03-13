@@ -40,11 +40,13 @@ const ws_endpoint_status = ref<string>('')
 function reset_status(){
     api_addr_status.value = "info"
     http_endpoint_status.value = "info"
-    ws_endpoint_status.value = 'info'
+    ws_endpoint_status.value = "info"
 }
 
 function reset_variables_addr(){
     api_addr.value =''
+    http_endpoint.value=''
+    ws_endpoint.value=''
     save()
 }
 
@@ -57,25 +59,60 @@ function save(){
 
 // Envisager d'utiliser web3 au lieu d'un curl
 function TestingConnectionAPI(){
-    // localStorage.setItem('api_addr', api_addr.value);
-    testingService.TestingAPI(api_addr.value).then(async response => {
-        if (response && 'data' in response && response.data.message == "API connected") {
-            api_addr_status.value = "success"
-        }else{
-            api_addr_status.value = "error"
-            console.log("Can't connect to the API backend")
-        }}).catch(error => {
-            console.log("Problem with connection to the backend")
+    if (api_addr.value == ""){
+        api_addr_status.value = "error"
+        console.log("No value has been entered")
+    } else {
+        testingService.TestingAPI(api_addr.value).then(async response => {
+            if (response && 'data' in response && response.data.message == "API connected") {
+                api_addr_status.value = "success"
+            }else{
+                api_addr_status.value = "error"
+                console.log("Can't connect to the API backend")
+            }
+        }).catch(error => {
+                console.log("Problem with connection to the backend")
         })
+    }
 }
 
 // Voir si on peut faire un curl pour du ws sinon utiliser web3
 function TestingConnectionHTTPEndpoint(){
+    if (http_endpoint.value == ""){
+        http_endpoint_status.value = "error"
+        console.log("No value has been entered")
+    } else {
+        testingService.TestingHTTPEndpoint(http_endpoint.value).then(async response => {
+        if (response && 'data' in response && response.status == 200) {
+            http_endpoint_status.value = "success"
+        } else {
+            http_endpoint_status.value = "error"
+            console.log("Can't connect to the node HTTP endpoint")
+        }}).catch(error => {
+            http_endpoint_status.value = "error"
+            console.log("Problem with connection to the HTTP endpoint")
+        })
+    }
 }
 
 
 // Voir si on peut faire un curl pour du ws sinon utiliser web3
 function TestingConnectionWSEndpoint(){
+    if (ws_endpoint.value == ""){
+            ws_endpoint_status.value = "error"
+            console.log("No value has been entered")
+    } else {
+        testingService.TestingWSEndpoint(ws_endpoint.value).then(async response => {
+        if (response == true){
+            ws_endpoint_status.value = "success"
+        } else {
+            ws_endpoint_status.value = "error"
+            console.log("Can't connect to the node WS endpoint")
+        }}).catch(error => {
+            ws_endpoint_status.value = "error"
+            console.log("Problem with connection to the WS endpoint")
+        })
+    }
 }
 
 // Chargement des valeurs sauvegardées au montage du composant
@@ -95,10 +132,9 @@ onMounted(() => {
             <Dialog v-model:visible="visible" modal header="Edit configuration" :style="{ width: '42rem' }">
                 <span class="p-text-secondary block mb-5">...</span>
                 
-                <div class="flex align-items-center gap-3 mb-3 label_input_container">
+                <div class="flex align-items-center gap-3 mb-5 label_input_container">
                     <label for="api_addr" class="font-semibold w-6rem">Backend API Address</label>
                     <div class="input_container">
-                        <label for="api_addr"></label>
                         <InputText id="api_addr" class="flex-auto" autocomplete="off" v-model="api_addr" v-bind:placeholder="api_addr"/>
                         <InlineMessage v-bind:severity="api_addr_status"></InlineMessage>
                         <Button outlined label="Test" v-on:click="TestingConnectionAPI" />
@@ -107,16 +143,17 @@ onMounted(() => {
                 <div class="flex align-items-center gap-3 mb-5 label_input_container">
                     <label for="http_endpoint" class="font-semibold w-6rem">Node HTTP endpoint</label>
                     <div class="input_container">
-                        <InputText id="http_endpoint" class="flex-auto" autocomplete="off" v-model="http_endpoint"/>
+                        <InputText id="http_endpoint" class="flex-auto" autocomplete="off" v-model="http_endpoint" v-bind:placeholder="http_endpoint"/>
                         <InlineMessage v-bind:severity="http_endpoint_status"></InlineMessage>
-                        <Button outlined label="Test" />
+                        <Button outlined label="Test" v-on:click="TestingConnectionHTTPEndpoint"/>
                     </div>
                 </div>
                 <div class="flex align-items-center gap-3 mb-5 label_input_container">
                     <label for="ws_endpoint" class="font-semibold w-6rem">Node WS endpoint</label>
                     <div class="input_container">
-                        <InputText id="ws_endpoint" class="flex-auto" autocomplete="off" v-model="ws_endpoint"/>
-                        <Button outlined label="Test" />
+                        <InputText id="ws_endpoint" class="flex-auto" autocomplete="off" v-model="ws_endpoint" v-bind:placeholder="ws_endpoint"/>
+                        <InlineMessage v-bind:severity="ws_endpoint_status"></InlineMessage>
+                        <Button outlined label="Test" v-on:click="TestingConnectionWSEndpoint"/>
                     </div>
                 </div>
                 <div class="buttons_cancel_reset_save flex justify-content-end gap-2">

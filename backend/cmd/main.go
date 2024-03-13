@@ -57,7 +57,7 @@ func main() {
 
 	router.Use(cors.Default()) // Allow all
 
-	router.POST("/testing", Testing)
+	router.GET("/testing", Testing)
 
 	router.POST("/faucet", SendEthersToSpecificAddress)
 
