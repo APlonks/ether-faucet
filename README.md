@@ -70,8 +70,6 @@ docker compose down
 ```
 
 ## TODO :
-- Error management, if blockchain not running and request are sent from the front : dont write it's ok
-- Modify nginx configuration to allow reload on SPA without returning 404
 - Implement transaction post EIP 1559
 - Ethereum logo using ThreeJS
 - Statistics page about Simulation
