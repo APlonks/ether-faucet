@@ -23,6 +23,7 @@ function submitForm (){
                 toast.add({ severity: 'warn', summary: 'Error', detail: 'Public address format is not valid', life: 3000});
             } else {
                 console.error("Problem with the http response from the backend")
+                toast.add({ severity: 'error', summary: 'Error', detail: 'Problem with the http response from the backend', life: 3000});
             }
         } else {
             console.error("Response is undefined or not in expected format.");

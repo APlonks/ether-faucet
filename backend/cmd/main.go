@@ -95,10 +95,10 @@ func SendEthersToSpecificAddress(c *gin.Context) {
 		return
 	}
 
-	// fmt.Println("The client:", clientHttp)
-	// fmt.Println("The privateKey:", richPrivKey)
-	// fmt.Println("The fromAddres:", richPubKey)
-	// fmt.Println("The toWallet:", common.HexToAddress(userReq.ToWallet))
+	fmt.Println("The client:", clientHttp)
+	fmt.Println("The privateKey:", richPrivKey)
+	fmt.Println("The fromAddres:", richPubKey)
+	fmt.Println("The toWallet:", common.HexToAddress(userReq.ToWallet))
 	if userReq.ToWallet == "" {
 		fmt.Println("Faucet : Send 1 ether to the Specific Address : 0x0000000000000000000000000000000000000000")
 		err = faucet.SendTransactionLegacy(clientHttp, richPrivKey, richPubKey, common.HexToAddress(userReq.ToWallet), float64(1))
@@ -154,16 +154,11 @@ func StartSimulationHandler(c *gin.Context) {
 	go func() {
 		fmt.Println("Going to start Simulation")
 		err = Simulation(simuReq, stopChannel)
-		errChannel <- err
-		fmt.Println("Going out from anonymous")
+		if err != nil {
+			c.JSON(200, gin.H{"message": "Failed to start simulation due to internal error.", "details": err.Error()})
+			fmt.Println("Going out from anonymous")
+		}
 	}()
-
-	errChan := <-errChannel
-	if errChan != nil {
-		fmt.Println("Problem about simulation")
-		c.JSON(http.StatusOK, gin.H{"message": "Cannot start Simulation"})
-		return
-	}
 
 	SimuRunning = true
 	c.JSON(http.StatusOK, gin.H{"message": "Simulation started"})
@@ -193,21 +188,22 @@ func StopSimulationHandler(c *gin.Context) {
 
 func Simulation(simuReq SimuRequest, stopChan chan bool) error {
 	fmt.Println()
+
 	richPrivKey, richPubKey, err = wallets.RetrieveKeysFromHexHashedPrivateKey(RICH_PRIVATE_KEY)
 	if err != nil {
-		fmt.Println("!! ERROR !!:", err)
+		fmt.Println("Error while retrieving public key from private key:", err)
 		return err
 	}
 
 	clientWs, err = ethclient.Dial(WS_ENDPOINT)
 	if err != nil {
-		fmt.Println("!! ERROR !!:", err)
+		fmt.Println("Error during setup with the WS_ENDPOINT:", err)
 		return err
 	}
 
 	err = simulation.Simulation(clientWs, richPrivKey, richPubKey, simuReq.AccountsPerWallet, simuReq.EthersPerWallet, simuReq.EthersPerTransaction, simuReq.TransactionsPerBlock, stopChan)
 	if err != nil {
-		fmt.Println("Error while trying to execute Simulation")
+		fmt.Println("Error while trying to execute Simulation:", err)
 		return err
 	}
 

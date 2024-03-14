@@ -54,7 +54,9 @@ func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKe
 	// fmt.Println("The fromAddres:", fromAddress)
 	// fmt.Println("The toWallet:", toWallet)
 	// fmt.Println("The number of ethers:", nbEthers)
+	fmt.Println("The fromAddress:", fromAddress)
 	nonce, err = client.PendingNonceAt(context.Background(), fromAddress)
+	fmt.Println("The nonce:", nonce)
 	if err != nil {
 		fmt.Println("Error while trying to retrieve the Nonce:", err)
 		return err

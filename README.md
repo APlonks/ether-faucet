@@ -52,6 +52,9 @@ Docker engine for Ubuntu : https://docs.docker.com/engine/install/ubuntu/
 #### Start
 
 ```bash
+# Create the network if it doesn't exist
+docker network create --driver bridge bcnetwork
+
 # Modify the environment variables for the Backend
 # Front variables will be modified in the web interface
 vim .env_compose 
@@ -62,6 +65,7 @@ docker compose up
 
 #### Stop
 ```bash
+# Stop the compose
 docker compose down
 ```
 
