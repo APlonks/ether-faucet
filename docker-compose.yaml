@@ -24,22 +24,6 @@ services:
     networks: 
       - bcnetwork
 
-  # weavescope:
-  #   image: weaveworks/scope:1.13.2
-  #   # network_mode: "host"
-  #   pid: "host"
-  #   privileged: true
-  #   ports:
-  #     - "4040:4040"
-  #   labels:
-  #     - "works.weave.role=system"
-  #   volumes:
-  #     - "/var/run/docker.sock:/var/run/docker.sock:rw"
-  #   command:
-  #     - "--probe.docker=true"
-  #   networks: 
-  #     - bcnetwork
-
 networks:
   bcnetwork:
     name: bcnetwork

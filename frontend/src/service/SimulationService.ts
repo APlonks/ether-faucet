@@ -2,7 +2,17 @@ import axios from 'axios'
 
 const SimulationService = {
     StartSimulation(accounts_per_wallet:number, ethers_per_wallet:number, ethers_per_transaction:number, transactions_per_block:number){
-        return axios.post(import.meta.env.VITE_BACKEND_URL+'/start-simulation',{
+        
+        const api_addr = localStorage.getItem('api_addr');
+        if (!api_addr) {
+            throw new Error('API URL not found in localStorage');
+        }
+
+        if (api_addr !== localStorage.getItem('api_addr')) {
+            throw new Error('The API URL does not match the expected value in localStorage');
+        }
+        
+        return axios.post(api_addr+'/start-simulation',{
             accounts_per_wallet: accounts_per_wallet,
             ethers_per_wallet: ethers_per_wallet,
             ethers_per_transaction: ethers_per_transaction,
@@ -13,7 +23,8 @@ const SimulationService = {
     },
 
     StopSimulation(){
-        return axios.post(import.meta.env.VITE_BACKEND_URL+'/stop-simulation',{
+        const api_addr = localStorage.getItem('api_addr')
+        return axios.post(api_addr+'/stop-simulation',{
         }).catch(error => {
             console.log(error);
         });

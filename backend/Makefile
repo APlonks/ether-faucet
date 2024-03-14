@@ -4,13 +4,13 @@ hello:
 	echo "Hello"
 
 dev:
-	go run cmd/main.go -config config.yaml
+	go run cmd/main.go
 
 build:
 	go build -o build/main.out cmd/main.go
 
 run:
-	./build/main.out -config config.yaml
+	./build/main.out
 
 compile:
 	echo "Compiling for every OS and Platform"

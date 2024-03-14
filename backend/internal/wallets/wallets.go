@@ -19,7 +19,7 @@ type Wallet struct {
 	AddressHex string
 }
 
-// Create a wallet by calloing CreateWallet() function
+// Create a wallet by calling CreateWallet() function
 func NewWallets() Wallet {
 	return CreateWallet()
 }

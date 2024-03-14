@@ -19,19 +19,20 @@ var (
 	walletsTo   []wallets.Wallet
 )
 
-func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richPubKey common.Address, numWallets int, ethersPerWallet int, ethersPerTransaction float64, numTransactions int, stopChan chan bool) {
+func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richPubKey common.Address, numWallets int, ethersPerWallet int, ethersPerTransaction float64, numTransactions int, stopChan chan bool) error {
 	walletsFrom = wallets.CreateWallets(numWallets)
-	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsFrom, float64(ethersPerWallet))
+	faucet.SendEthersToAWalletPool(wsClient, richPrivKey, richPubKey, walletsFrom, float64(ethersPerWallet))
 
 	walletsTo = wallets.CreateWallets(numWallets)
-	faucet.SendEthers(wsClient, richPrivKey, richPubKey, walletsTo, float64(ethersPerWallet))
+	faucet.SendEthersToAWalletPool(wsClient, richPrivKey, richPubKey, walletsTo, float64(ethersPerWallet))
 
 	time.Sleep(13 * time.Second) // Waiting for a block
 
 	headers := make(chan *types.Header)
 	sub, err := wsClient.SubscribeNewHead(context.Background(), headers)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error while trying subcribbe to the blockchain")
+		return err
 	}
 	for {
 		select {
@@ -46,7 +47,7 @@ func Simulation(wsClient *ethclient.Client, richPrivKey *ecdsa.PrivateKey, richP
 			faucet.SendEthersFromAPoolToAPool(wsClient, walletsFrom, walletsTo, numTransactions, ethersPerTransaction)
 		case <-stopChan:
 			fmt.Println("Simulation : Stopping simulation...")
-			return
+			return nil
 		}
 	}
 

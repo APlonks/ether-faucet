@@ -43,23 +43,32 @@ make build   # Build for prod mode
 make run    # Run for prod mode
 ```
 
-### Docker
+### Docker Compose
 
-#### Build Dockerfile
+#### Install docker
 
-**Frontend**
+Docker engine for Ubuntu : https://docs.docker.com/engine/install/ubuntu/
+
+#### Start
+
 ```bash
-cd frontend
-docker build -t ether-faucet-frontend:0.1 .
-docker run -p 8888:80 --rm --name ether-faucet-frontend ether-faucet-frontend:0.1
+# Modify the environment variables for the Backend
+# Front variables will be modified in the web interface
+vim .env_compose 
+
+# Start the compose
+docker compose up
 ```
 
-**Backend**
+#### Stop
 ```bash
-cd backend
-docker build -t ether-faucet-backend:0.1 .
-docker run
+docker compose down
 ```
 
-## TODO : 
+## TODO :
+- Error management, if blockchain not running and request are sent from the front : dont write it's ok
+- Modify nginx configuration to allow reload on SPA without returning 404
 - Implement transaction post EIP 1559
+- Ethereum logo using ThreeJS
+- Statistics page about Simulation
+- Deployment using Helm for Kubernetes

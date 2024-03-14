@@ -12,4 +12,4 @@ const wallet_to_send = ref(null)
 
 <style>
 
-</style>../components/actions/SendEthersToSpecificAddress.vue
+</style>

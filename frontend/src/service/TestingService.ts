@@ -24,7 +24,7 @@ const testingService = {
         
             ws.onopen = () => {
               console.log("Connection established");
-              ws.close(); // Ferme la connexion une fois établie
+              ws.close(); // Close connection once established
               resolve(true);
             };
         
@@ -32,9 +32,6 @@ const testingService = {
               console.log("Connection failed", error);
               resolve(false);
             };
-        
-            // Le gestionnaire onclose pourrait être utilisé pour des cas plus spécifiques
-            // où la connexion est établie puis fermée pour d'autres raisons.
           });
     },
 }

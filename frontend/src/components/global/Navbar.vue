@@ -51,13 +51,13 @@ function reset_variables_addr(){
 }
 
 function save(){
-    // Sauvegarde des valeurs dans localStorage
+    // Save values in localStorage
     localStorage.setItem('api_addr', api_addr.value);
     localStorage.setItem('http_endpoint', http_endpoint.value);
     localStorage.setItem('ws_endpoint', ws_endpoint.value);
 }
 
-// Envisager d'utiliser web3 au lieu d'un curl
+// Test connection to API
 function TestingConnectionAPI(){
     if (api_addr.value == ""){
         api_addr_status.value = "error"
@@ -76,7 +76,7 @@ function TestingConnectionAPI(){
     }
 }
 
-// Voir si on peut faire un curl pour du ws sinon utiliser web3
+// Test connection to the Node ethereum http endpoint
 function TestingConnectionHTTPEndpoint(){
     if (http_endpoint.value == ""){
         http_endpoint_status.value = "error"
@@ -96,7 +96,7 @@ function TestingConnectionHTTPEndpoint(){
 }
 
 
-// Voir si on peut faire un curl pour du ws sinon utiliser web3
+// Test connection to the Node ethereum ws endpoint
 function TestingConnectionWSEndpoint(){
     if (ws_endpoint.value == ""){
             ws_endpoint_status.value = "error"
@@ -115,7 +115,7 @@ function TestingConnectionWSEndpoint(){
     }
 }
 
-// Chargement des valeurs sauvegardées au montage du composant
+// Load saved values when component mounted
 onMounted(() => {
     api_addr.value = localStorage.getItem('api_addr') || '';
     http_endpoint.value = localStorage.getItem('http_endpoint') || '';

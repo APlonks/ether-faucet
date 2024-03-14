@@ -1,7 +1,6 @@
 package faucet
 
 import (
-	"backend/internal/utils"
 	"backend/internal/wallets"
 	"context"
 	"crypto/ecdsa"
@@ -45,19 +44,21 @@ func SendEthersFromAPoolToAPool(client *ethclient.Client, walletsFrom []wallets.
 }
 
 // Transaction Pre EIP 1559
-func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKey, fromAddress common.Address, toWallet common.Address, nbEthers float64) {
-	fmt.Println("Entering in SendTransactionLegacy")
+func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKey, fromAddress common.Address, toWallet common.Address, nbEthers float64) error {
 	var (
 		nonce uint64
 		err   error
 	)
-	fmt.Println("The client:", client)
-	fmt.Println("The privateKey:", privateKey)
-	fmt.Println("The fromAddres:", fromAddress)
-	fmt.Println("The toWallet:", toWallet)
-	fmt.Println("The number of ethers:", nbEthers)
+	// fmt.Println("The client:", client)
+	// fmt.Println("The privateKey:", privateKey)
+	// fmt.Println("The fromAddres:", fromAddress)
+	// fmt.Println("The toWallet:", toWallet)
+	// fmt.Println("The number of ethers:", nbEthers)
 	nonce, err = client.PendingNonceAt(context.Background(), fromAddress)
-	utils.ErrManagement(err)
+	if err != nil {
+		fmt.Println("Error while trying to retrieve the Nonce:", err)
+		return err
+	}
 	amount := big.NewFloat(nbEthers)
 	fmt.Println("PendingNonce At passed")
 
@@ -90,6 +91,8 @@ func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKe
 		log.Fatal("Problem sending transaction:", err)
 	}
 	fmt.Println("Post sending transaction")
+
+	return nil
 }
 
 func SendEthersToSpecificWallet(client *ethclient.Client, privateKey *ecdsa.PrivateKey, fromAddress common.Address, toWallet wallets.Wallet, nbEthers float64) {
@@ -97,7 +100,7 @@ func SendEthersToSpecificWallet(client *ethclient.Client, privateKey *ecdsa.Priv
 	SendTransactionLegacy(client, privateKey, fromAddress, toWallet.Address, nbEthers)
 }
 
-func SendEthers(client *ethclient.Client, privateKey *ecdsa.PrivateKey, fromAddress common.Address, wallets []wallets.Wallet, nbEthers float64) {
+func SendEthersToAWalletPool(client *ethclient.Client, privateKey *ecdsa.PrivateKey, fromAddress common.Address, wallets []wallets.Wallet, nbEthers float64) {
 
 	for _, wallet := range wallets {
 		SendTransactionLegacy(client, privateKey, fromAddress, wallet.Address, nbEthers)
