@@ -28,9 +28,7 @@ var (
 	richPrivKey      *ecdsa.PrivateKey
 	richPubKey       common.Address
 	stopChannel      chan bool // Simulation control
-	errChannel       chan error
 	SimuRunning      bool
-	// wg               sync.WaitGroups
 )
 
 type SimuRequest struct {
