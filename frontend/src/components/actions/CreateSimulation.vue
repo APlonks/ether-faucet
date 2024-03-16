@@ -28,6 +28,8 @@ function startSimulation(){
                 toast.add({ severity: 'info', summary: 'Success', detail: 'Simulation started', life: 3000});
             } else if (reqReturn.value == "Cannot start Simulation"){
                 toast.add({ severity: 'info', summary: 'Success', detail: 'Cannot start Simulation, look at backend logs', life: 3000});
+            } else if (reqReturn.value == "Failed to start simulation due to internal error."){
+                toast.add({ severity: 'error', summary: 'Success', detail: 'Failed to start simulation due to internal error.', life: 3000});
             }
         } else {
             console.error("Response is undefined or not in expected format.");

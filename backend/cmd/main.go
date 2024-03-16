@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"reflect"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -28,7 +29,8 @@ var (
 	richPrivKey      *ecdsa.PrivateKey
 	richPubKey       common.Address
 	stopChannel      chan bool // Simulation control
-	SimuRunning      bool
+	SimuStarted      bool      // To check for startup errors
+	SimuRunning      bool      // To check if simulation is already running
 )
 
 type SimuRequest struct {
@@ -93,10 +95,6 @@ func SendEthersToSpecificAddress(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("The client:", clientHttp)
-	fmt.Println("The privateKey:", richPrivKey)
-	fmt.Println("The fromAddres:", richPubKey)
-	fmt.Println("The toWallet:", common.HexToAddress(userReq.ToWallet))
 	if userReq.ToWallet == "" {
 		fmt.Println("Faucet : Send 1 ether to the Specific Address : 0x0000000000000000000000000000000000000000")
 		err = faucet.SendTransactionLegacy(clientHttp, richPrivKey, richPubKey, common.HexToAddress(userReq.ToWallet), float64(1))
@@ -148,19 +146,25 @@ func StartSimulationHandler(c *gin.Context) {
 		return
 	}
 
-	// wg.Add(1)
+	SimuStarted = true // Default is true but pass at false is there is an error
 	go func() {
-		fmt.Println("Going to start Simulation")
+		fmt.Println("Simulation starting")
 		err = Simulation(simuReq, stopChannel)
 		if err != nil {
-			c.JSON(200, gin.H{"message": "Failed to start simulation due to internal error.", "details": err.Error()})
+			c.JSON(http.StatusOK, gin.H{"message": "Failed to start simulation due to internal error."})
+			SimuStarted = false
 			fmt.Println("Going out from anonymous")
 		}
 	}()
 
-	SimuRunning = true
-	c.JSON(http.StatusOK, gin.H{"message": "Simulation started"})
-	fmt.Println("Simulation started")
+	time.Sleep(2 * time.Second) // Sleep for 2 seconds
+	fmt.Println("Value of Simu Started:", SimuStarted)
+	if SimuStarted {
+		SimuRunning = true
+		c.JSON(http.StatusOK, gin.H{"message": "Simulation started"})
+		fmt.Println("Simulation started")
+	}
+
 }
 
 func StopSimulationHandler(c *gin.Context) {

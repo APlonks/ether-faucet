@@ -6,24 +6,6 @@ import HelpConfiguration from './HelpConfiguration.vue'
 import Image from 'primevue/image';
 import Button from 'primevue/button';
 
-// Path for light and dark theme
-const darkThemePath = '/themes/aura-dark-blue/theme.css';
-const lightThemePath = '/themes/aura-light-blue/theme.css';
-
-// Ref to follow the current theme
-const currentThemePath = ref(lightThemePath);
-
-function toggleTheme() {
-    // To change theme
-    currentThemePath.value = currentThemePath.value === lightThemePath ? darkThemePath : lightThemePath;
-  
-    // Update <link> element with new item
-    const themeLink = document.getElementById('theme-link');
-    if (themeLink) {
-        (themeLink as HTMLLinkElement).href = currentThemePath.value;
-    }
-}
-
 </script>
 
 <template>
@@ -39,7 +21,7 @@ function toggleTheme() {
             </RouterLink>
         </div>
         <div class="dark_mode_button_container">
-            <Button @click="toggleTheme" label="Dark Mode" />
+            <Button label="Nothing :)" />
         </div>
     </div>
 </template>
