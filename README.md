@@ -74,3 +74,4 @@ docker compose down
 - Ethereum logo using ThreeJS
 - Statistics page about Simulation
 - Deployment using Helm for Kubernetes
+- Add a Redis to manage the synchronization of multiple backends (Kubernetes deployment) and features such as simulation, which you can only run once at any given time. 
