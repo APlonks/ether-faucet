@@ -71,10 +71,9 @@ function stopSimulation(){
                 <label for="stacked-buttons" class="font-bold block mb-2"> Transactions per block </label>
                 <InputNumber v-model="transactions_per_block" inputId="transactions-per-block" mode="decimal" showButtons :min="2" :max="100" :step="1"/>
             </div>
-            <br>
-            <div>
-                <Button class="simu_button" label="Start Simulaion" outlined @click="startSimulation"/>
-                <Button class="simu_button" label="Stop Simulation" outlined @click="stopSimulation"/>
+            <div class="simu_buttons_container">
+                <Button class="simu_button" label="Start Simulaion" @click="startSimulation"/>
+                <Button class="simu_button" label="Stop Simulation" @click="stopSimulation"/>
             </div>
             <Toast/>
         </div>
@@ -99,6 +98,10 @@ function stopSimulation(){
 .faucet_form{
     display: flex;
     flex-direction: column;
+}
+
+.simu_buttons_container{
+    margin-top: 2rem;
 }
 
 .simu_help_button{

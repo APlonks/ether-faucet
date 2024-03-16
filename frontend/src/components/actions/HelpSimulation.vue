@@ -8,7 +8,7 @@ const visible = ref(false);
 
 <template>
     <div class="help-simu card flex justify-content-center">
-        <Sidebar v-model:visible="visible" header="Sidebar" class="w-full md:w-20rem lg:w-30rem">
+        <Sidebar v-model:visible="visible" header="Help Simulation" class="w-full md:w-20rem lg:w-30rem">
             <h3 style="bold">How it works ?</h3>
             <p>Click on "Start Simulation" to create two wallet groups (with the same number of wallets).</p> 
             <p>Each wallets in these groups will receive the same number of ethers at start-up.</p>
@@ -25,7 +25,7 @@ const visible = ref(false);
             <p>Each group of wallets will send the number of transactions to each block. This number is half the total configurable number of transactions.</p>
             <p>Then choose a pair number or a transaction will be removed from the total.</p>
         </Sidebar>
-        <Button label="Help" @click="visible = true" />
+        <Button outlined label="Help Simulation" @click="visible = true" />
     </div>
 </template>
 

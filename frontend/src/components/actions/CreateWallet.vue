@@ -30,9 +30,9 @@ const columns = [
 
 <template>
     <div class="container">
-        <Button @click="createWallet" label="New Wallet" outlined />
+        <Button @click="createWallet" label="New Wallet" />
         <br>
-        <div class="card">
+        <div class="accounts_table">
             <DataTable :value="wallets" :tableStyle="{ minWidth: '60rem' }">
                 <Column v-for="col in columns" :key="col.field" :field="col.field" :header="col.header"></Column>
             </DataTable>
@@ -45,4 +45,9 @@ const columns = [
     display: flex;
     flex-direction: column;
 }
+
+.accounts_table{
+    margin-top: 1rem;
+}
+
 </style>

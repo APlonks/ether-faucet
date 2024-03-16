@@ -47,8 +47,7 @@ function submitForm (){
             <label for="wallet_to_send">Choose the public address</label>
             <InputText class="faucet_input" id="wallet_to_send" v-model="wallet_to_send" aria-describedby="username-help" />
         </FloatLabel>
-        <br>
-        <Button class="faucet_button" label="Send Transaction" outlined type="submit"/>
+        <Button class="faucet_button" label="Send Transaction" type="submit"/>
     </form>
     <Toast/>
 </div>
@@ -74,6 +73,7 @@ function submitForm (){
 }
 
 .faucet_button{
+    margin-top: 2rem;
     max-width: 50%;
 }
 
