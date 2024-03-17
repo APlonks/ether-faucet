@@ -46,8 +46,8 @@ function stopSimulation(){
             reqReturn.value = response.data.message
             if(reqReturn.value == "Simulation already stopped"){
                 toast.add({ severity: 'warn', summary: 'Warning', detail: 'Simulation already stopped', life: 3000});
-            }else if (reqReturn.value == "Simulation stopped"){
-                toast.add({ severity: 'info', summary: 'Warning', detail: 'Simulation stopped', life: 3000});
+            }else if (reqReturn.value == "Simulation stopped or reset successfully"){
+                toast.add({ severity: 'info', summary: 'Warning', detail: 'Simulation stopped or reset successfully', life: 3000});
             }
         }
     })
@@ -74,7 +74,7 @@ function stopSimulation(){
                 <InputNumber v-model="transactions_per_block" inputId="transactions-per-block" mode="decimal" showButtons :min="2" :max="100" :step="1"/>
             </div>
             <div class="simu_buttons_container">
-                <Button class="simu_button" label="Start Simulaion" @click="startSimulation"/>
+                <Button class="simu_button" label="Start Simulation" @click="startSimulation"/>
                 <Button class="simu_button" label="Stop Simulation" @click="stopSimulation"/>
             </div>
             <Toast/>

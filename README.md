@@ -43,6 +43,12 @@ make build   # Build for prod mode
 make run    # Run for prod mode
 ```
 
+**Redis Stack**
+```bash
+# Using docker : 
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:7.2.0-v9
+```
+
 ### Docker Compose
 
 #### Install docker

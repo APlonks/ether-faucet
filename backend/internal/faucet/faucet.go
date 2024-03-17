@@ -68,7 +68,6 @@ func SendTransactionLegacy(client *ethclient.Client, privateKey *ecdsa.PrivateKe
 		log.Fatal(err)
 	}
 	var data []byte
-	fmt.Println("Pre NewTransaction")
 	tx := types.NewTransaction(nonce, toWallet, value, gasLimit, gasPrice, data)
 	chainID, err := client.ChainID(context.Background())
 	if err != nil {

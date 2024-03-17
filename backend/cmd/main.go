@@ -23,6 +23,7 @@ var (
 	RICH_PRIVATE_KEY string
 	HTTP_ENDPOINT    string
 	WS_ENDPOINT      string
+	REDIS_URL        string
 	err              error
 	clientHttp       *ethclient.Client
 	clientWs         *ethclient.Client
@@ -31,6 +32,7 @@ var (
 	stopChannel      chan bool // Simulation control
 	SimuStarted      bool      // To check for startup errors
 	SimuRunning      bool      // To check if simulation is already running
+	RedisSimuRunning string    //To check if simulation is running (from Redis)
 )
 
 type SimuRequest struct {
@@ -51,6 +53,7 @@ func main() {
 	RICH_PRIVATE_KEY = os.Getenv("RICH_PRIVATE_KEY")
 	HTTP_ENDPOINT = os.Getenv("HTTP_ENDPOINT")
 	WS_ENDPOINT = os.Getenv("WS_ENDPOINT")
+	REDIS_URL = os.Getenv("REDIS_URL")
 
 	// Init channel stopChannel
 	stopChannel = make(chan bool)
@@ -120,6 +123,12 @@ func SendEthersToSpecificAddress(c *gin.Context) {
 func StartSimulationHandler(c *gin.Context) {
 	fmt.Println()
 	var simuReq SimuRequest
+	SimuRunning, err = utils.GetSimuRunning(REDIS_URL)
+	if err != nil {
+		fmt.Println("Simu Running after GetSimuRunning:", SimuRunning)
+		c.JSON(http.StatusOK, gin.H{"message": "Problem while trying to see if Simu is working"})
+		return
+	}
 
 	if SimuRunning {
 		fmt.Println("Simulation already started")
@@ -158,11 +167,16 @@ func StartSimulationHandler(c *gin.Context) {
 	}()
 
 	time.Sleep(2 * time.Second) // Sleep for 2 seconds
-	fmt.Println("Value of Simu Started:", SimuStarted)
+	// fmt.Println("Value of Simu Started:", SimuStarted)
 	if SimuStarted {
-		SimuRunning = true
+		err = utils.SetSimuRunning(REDIS_URL, "true")
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{"message": "Failed to set simulation at true in Redis"})
+		}
+
 		c.JSON(http.StatusOK, gin.H{"message": "Simulation started"})
 		fmt.Println("Simulation started")
+		fmt.Println()
 	}
 
 }
@@ -176,16 +190,36 @@ func StopSimulationHandler(c *gin.Context) {
 		return
 	}
 
+	SimuRunning, err = utils.GetSimuRunning(REDIS_URL)
+	fmt.Println("Simu Running after GetSimuRunning:", SimuRunning)
+	if err != nil {
+		fmt.Println("Error:", err)
+		c.JSON(http.StatusOK, gin.H{"message": "Problem while trying to see if Simu is working"})
+		return
+	}
+
 	if !SimuRunning {
 		fmt.Println("Simulation : Simulation already stopped")
 		c.JSON(http.StatusOK, gin.H{"message": "Simulation already stopped"})
 		return
 	}
 
-	fmt.Println("Simulation : Going to stop Simulation")
-	SimuRunning = false
-	stopChannel <- true
-	c.JSON(http.StatusOK, gin.H{"message": "Simulation stopped"})
+	fmt.Println("Attempting to stop a non-existing simulation. Resetting Redis state.")
+	err = utils.SetSimuRunning(REDIS_URL, "false")
+	if err != nil {
+		fmt.Println("Error while trying to reset simulation state in Redis:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to reset simulation state in Redis"})
+		return
+	}
+
+	select {
+	case stopChannel <- true:
+		fmt.Println("Sent stop signal just in case.")
+	default:
+		fmt.Println("No stop signal sent, channel was not listening.")
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Simulation stopped or reset successfully"})
 }
 
 func Simulation(simuReq SimuRequest, stopChan chan bool) error {
