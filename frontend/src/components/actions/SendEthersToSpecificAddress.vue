@@ -12,7 +12,15 @@ const toast = useToast();
 const reqReturn = ref("")
 
 function submitForm (){
-    faucetService.SendEthersToSpecificAddress(wallet_to_send.value).then(response => {
+    const api_addr = localStorage.getItem('api_addr');
+    if (!api_addr) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'API URL is not configured in the configuration section', life: 3000});
+        throw new Error('API URL not found in localStorage');
+    } else if (api_addr !== localStorage.getItem('api_addr')) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Internal error, api_url variable is not correponding to the local storage api url', life: 3000});
+        throw new Error('The API URL does not match the expected value in localStorage');
+    } else {
+        faucetService.SendEthersToSpecificAddress(wallet_to_send.value).then(response => {
         if (response && 'data' in response) {
             console.log("The response:",response)
             reqReturn.value = response.data.message
@@ -29,12 +37,12 @@ function submitForm (){
             console.error("Response is undefined or not in expected format.");
             console.error("The Backend is propably not running");
             toast.add({ severity: 'error', summary: 'Error', detail: 'Request not sent to the backend (check console)', life: 3000});
-        }
-    }).catch(error => {
-        console.error('Error sending transaction : check the file .env of the frontend to configure the backend ip');
-        console.error(error)
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Not sent to the backend (check console)', life: 3000});
-    });
+        }}).catch(error => {
+            console.error('Error sending transaction : check the file .env of the frontend to configure the backend ip');
+            console.error(error)
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Not sent to the backend (check console)', life: 3000});
+        });
+    }
 }
 
 </script>

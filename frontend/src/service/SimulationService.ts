@@ -2,16 +2,7 @@ import axios from 'axios'
 
 const SimulationService = {
     StartSimulation(accounts_per_wallet:number, ethers_per_wallet:number, ethers_per_transaction:number, transactions_per_block:number){
-        
         const api_addr = localStorage.getItem('api_addr');
-        if (!api_addr) {
-            throw new Error('API URL not found in localStorage');
-        }
-
-        if (api_addr !== localStorage.getItem('api_addr')) {
-            throw new Error('The API URL does not match the expected value in localStorage');
-        }
-        
         return axios.post(api_addr+'/start-simulation',{
             accounts_per_wallet: accounts_per_wallet,
             ethers_per_wallet: ethers_per_wallet,
