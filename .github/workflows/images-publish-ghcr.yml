@@ -17,10 +17,10 @@ jobs:
         include:
           - dockerfile: ./backend/Containerfile
             context: ./backend
-            image: ghcr.io/aplonks/ether-faucet-frontend
+            image: ghcr.io/aplonks/ether-faucet-backend
           - dockerfile: ./frontend/Containerfile
             context: ./frontend
-            image: ghcr.io/aplonks/ether-faucet-backend
+            image: ghcr.io/aplonks/ether-faucet-frontend
 
     permissions:
       contents: read

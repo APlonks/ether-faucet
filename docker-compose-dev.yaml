@@ -2,7 +2,9 @@ version: "3.9"
 services:
   ether-faucet-frontend:
     container_name: ether-faucet-frontend
-    image: ghcr.io/aplonks/ether-faucet-frontend:dev
+    build:
+      context: ./frontend
+      dockerfile: Containerfile
     ports: 
       - 5001:80
     env_file:
@@ -12,7 +14,9 @@ services:
 
   ether-faucet-backend:
     container_name: ether-faucet-backend
-    image: ghcr.io/aplonks/ether-faucet-backend:dev
+    build:
+      context: ./backend
+      dockerfile: Containerfile
     ports: 
       - 5002:5002
     env_file:
@@ -28,6 +32,7 @@ services:
       - "6379:6379"
     networks:
       - bcnetwork
+
 
 networks:
   bcnetwork:
