@@ -2,7 +2,7 @@ version: "3.9"
 services:
   ether-faucet-frontend:
     container_name: ether-faucet-frontend
-    image: ghcr.io/aplonks/ether-faucet-frontend:dev
+    image: ghcr.io/aplonks/ether-faucet-frontend:main
     ports: 
       - 5001:80
     env_file:
@@ -12,7 +12,7 @@ services:
 
   ether-faucet-backend:
     container_name: ether-faucet-backend
-    image: ghcr.io/aplonks/ether-faucet-backend:dev
+    image: ghcr.io/aplonks/ether-faucet-backend:main
     ports: 
       - 5002:5002
     env_file:

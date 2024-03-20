@@ -3,7 +3,7 @@ name: Build & publish ether-faucet images
 on:
   push:
     branches: 
-      - dev
+      - main
 
 env:
   REGISTRY: ghcr.io
