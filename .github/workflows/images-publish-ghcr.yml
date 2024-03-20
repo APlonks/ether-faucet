@@ -11,13 +11,15 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         include:
           - dockerfile: ./backend/Containerfile
+            context: ./backend
             image: ghcr.io/aplonks/ether-faucet-frontend
           - dockerfile: ./frontend/Containerfile
+            context: ./frontend
             image: ghcr.io/aplonks/ether-faucet-backend
 
     permissions:
@@ -44,7 +46,7 @@ jobs:
       - name: Build and push Docker image ether-faucet
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
