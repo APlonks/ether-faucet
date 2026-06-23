@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   ether-faucet-frontend:
     container_name: ether-faucet-frontend

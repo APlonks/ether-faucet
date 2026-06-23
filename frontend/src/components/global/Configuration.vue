@@ -9,7 +9,7 @@ import testingService from "@/service/TestingService";
 
 const visible = ref<boolean>(false)
 
-const api_addr = ref<string>('')
+const api_addr = ref<string>('/api')
 const http_endpoint = ref<string>('')
 const ws_endpoint = ref<string>('')
 
@@ -24,7 +24,6 @@ function reset_status(){
 }
 
 function reset_variables_addr(){
-    api_addr.value =''
     http_endpoint.value=''
     ws_endpoint.value=''
     save()
@@ -32,18 +31,13 @@ function reset_variables_addr(){
 
 function save(){
     // Save values in localStorage
-    localStorage.setItem('api_addr', api_addr.value);
     localStorage.setItem('http_endpoint', http_endpoint.value);
     localStorage.setItem('ws_endpoint', ws_endpoint.value);
 }
 
 // Test connection to API
 function TestingConnectionAPI(){
-    if (api_addr.value == ""){
-        api_addr_status.value = "error"
-        console.log("No value has been entered")
-    } else {
-        testingService.TestingAPI(api_addr.value).then(async response => {
+        testingService.TestingAPI().then(async response => {
             if (response && 'data' in response && response.data.message == "API connected") {
                 api_addr_status.value = "success"
             }else{
@@ -53,7 +47,6 @@ function TestingConnectionAPI(){
         }).catch(error => {
                 console.log("Problem with connection to the backend")
         })
-    }
 }
 
 // Test connection to the Node ethereum http endpoint
@@ -83,7 +76,6 @@ function TestingConnectionHTTPEndpoint(){
 
 // Load saved values when component mounted
 onMounted(() => {
-    api_addr.value = localStorage.getItem('api_addr') || '';
     http_endpoint.value = localStorage.getItem('http_endpoint') || '';
     ws_endpoint.value = localStorage.getItem('ws_endpoint') || '';
 });
@@ -123,7 +115,7 @@ function TestingConnectionWSEndpoint(){
             <div class="flex align-items-center gap-3 mb-5 label_input_container">
                 <label for="api_addr" class="font-semibold w-6rem">Backend API Address</label>
                 <div class="input_container">
-                    <InputText id="api_addr" class="flex-auto" autocomplete="off" v-model="api_addr" v-bind:placeholder="api_addr"/>
+                    <InputText id="api_addr" class="flex-auto" autocomplete="off" v-model="api_addr" readonly/>
                     <InlineMessage v-bind:severity="api_addr_status"></InlineMessage>
                     <Button outlined label="Test" v-on:click="TestingConnectionAPI" />
                 </div>

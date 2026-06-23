@@ -1,9 +1,8 @@
 import axios from 'axios'
-import Web3 from 'web3';
 
 const testingService = {
-    TestingAPI(api_addr:string){
-        return axios.get(api_addr+'/testing',{
+    TestingAPI(){
+        return axios.get('/api/testing',{
         }).catch(error => {
             console.log(error);
         });

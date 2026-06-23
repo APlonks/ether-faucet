@@ -14,13 +14,13 @@ const visible = ref(false);
             <p>Your frontend will not communicate directly with your blockchain node. It will make requests to the API (backend), which will then create a client to communicate with your node.</p>
             <br>
             <h3 style="bold">Examples of values using default configuration should be :</h3>
-            <p>Backend API Address: http://X.X.X.X:5002</p>
+            <p>Backend API Address: /api (configured automatically through the frontend reverse proxy)</p>
             <p>Node HTTP endpoint: http://X.X.X.X:8545</p>
             <p>Node WS endpoint: http://X.X.X.X:8546</p>
             <p>X.X.X.X corresponds to IP address like : 192.168.3.124</p>
             <br>
             <h3>To know</h3>
-            <p>Currently only "Backend API Address" is required</p>
+            <p>The backend API address is configured automatically. The blockchain node endpoints remain configurable.</p>
         </Sidebar>
         <Button outlined label="Help Configuration" @click="visible = true" />
     </div>
